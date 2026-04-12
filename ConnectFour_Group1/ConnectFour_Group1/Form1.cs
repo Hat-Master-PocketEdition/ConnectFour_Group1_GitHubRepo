@@ -4,7 +4,7 @@ namespace ConnectFour_Group1
     {
 
         int[,] gameBoard = new int[7, 6];
-        //comment
+        //comment test
 
         public Form1()
         {
