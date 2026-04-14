@@ -40,11 +40,10 @@ namespace ConnectFour_Group1
         {
             //This Function creates the visuals for the gameboard
             //using a nested for-loop
+            //This is only used for the spawning each cell of the
+            //game board
 
-            //This is only used for the intial creation of the board
-            //and drawing it for the first time.
-
-            //Authored by AWatkins (stack exchange is so cool oh my goodness)
+            //AW
 
             for (int x = 0; x < 7; x++)
             {
@@ -72,7 +71,6 @@ namespace ConnectFour_Group1
 
         private void PictureBox_Clicked(object sender, EventArgs e)
         {
-
             PictureBox Pic = sender as PictureBox;
 
             //reverse-engineering the location data to get the 2d array
@@ -80,13 +78,18 @@ namespace ConnectFour_Group1
             int x = (Pic.Location.X - 200) / 48;
             int y = -(Pic.Location.Y - 300) / 44;
 
+            //we can use that X and Y data to translate it to CodeBoard
+            //GameBoard[] and CodeBoard[] are set up the exact same way, so we
+            //basically we swap out RedChip.png and YellowChip.png for 1 and 2
             DropChip("red", 1, x, y);
+            MouseEnter(sender, e);
         }
 
         private void MouseEnter(object sender, EventArgs e)
         {
             PictureBox Pic = sender as PictureBox;
-            Pic.Image = Highlighter;
+            //Pic.Image = Highlighter;
+            HoverChip("red", 1, (Pic.Location.X - 200) / 48, -(Pic.Location.Y - 300) / 44);
         }
 
         private void MouseLeave(object sender, EventArgs e)
@@ -108,7 +111,7 @@ namespace ConnectFour_Group1
                     {
                         GameBoard[x, y].Image = Image.FromFile(@"../../Resources/RedChip.png");
                     }
-                    else if (CodeBoard[x, y] == 0)
+                    else if (CodeBoard[x, y] == 2)
                     {
                         GameBoard[x, y].Image = Image.FromFile(@"../../Resources/YellowChip.png");
                     }
@@ -117,12 +120,25 @@ namespace ConnectFour_Group1
         }
         private void DropChip(string color, int player, int x, int y)
         {
+            //This function handles the dropping of a player's chip
+            //it traverses a collumn of CodeBoard until it finds an
+            //open spot that "obeys the laws of gravity."
             int startY = 5;
             while (true)
             {
-                if (startY == 0)
+                if (CodeBoard[x, startY] != 0)
+                {
+                    //this column is already filled up
+                    //we cannot drop the chip here
+                    //do nothing and break
+
+                    break;
+                }
+                else if (startY == 0)
                 {
                     //startY has traversed as far as it can go
+                    //that means it's hit the bottom of the game board
+                    //we will place the chip here :)
                     Debug.WriteLine("WRITING");
                     CodeBoard[x, startY] = player;
                     Debug.WriteLine("SAVED " + player + " TO CodeBoard[" + x + ", " + y + "]");
@@ -148,9 +164,50 @@ namespace ConnectFour_Group1
 
             }
             RedrawGameBoard();
-            PrintCodeBoardToConsole();
+            //PrintCodeBoardToConsole();
         }
+        private void HoverChip(string color, int player, int x, int y)
+        {
+            //HoverChip() is a carbon copy of DropChip with some slight differences
+            //instead of handling placing chips, this manages the "hologram" that 
+            //allows a player to preview their move
 
+            //AW
+            int startY = 5;
+            while (true)
+            {
+                if (CodeBoard[x, startY] != 0)
+                {
+                    //this column is already filled up
+                    //we cannot drop the chip here
+                    //do nothing
+                }
+                else if (startY == 0)
+                {
+
+                    GameBoard[x, startY].Image = Image.FromFile(@"../../Resources/RedChip.png"); ;
+
+                    break;
+
+                }
+                else if (CodeBoard[x, startY - 1] == 1)
+                {
+                    //startY has fallen and found another chip
+                    //we will place it on top of that chip
+                    GameBoard[x, startY].Image = Image.FromFile(@"../../Resources/RedChip.png"); ;
+
+                    break;
+                }
+                else if (CodeBoard[x, startY] == 0)
+                {
+                    //there is empty space below the currently falling chip
+
+                    //Debug.WriteLine("CodeBoard at [" + x + ", " + startY + "] is empty");
+                    startY--;
+                }
+
+            }
+        }
         private void PrintCodeBoardToConsole()
         {
             Debug.WriteLine("");
