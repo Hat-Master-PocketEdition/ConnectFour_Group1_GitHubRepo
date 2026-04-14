@@ -1,14 +1,14 @@
 ﻿namespace ConnectFour_Group1
 {
-    partial class Form1
+    partial class StatsForm
     {
         /// <summary>
-        ///  Required designer variable.
+        /// Required designer variable.
         /// </summary>
         private System.ComponentModel.IContainer components = null;
 
         /// <summary>
-        ///  Clean up any resources being used.
+        /// Clean up any resources being used.
         /// </summary>
         /// <param name="disposing">true if managed resources should be disposed; otherwise, false.</param>
         protected override void Dispose(bool disposing)
@@ -23,37 +23,39 @@
         #region Windows Form Designer generated code
 
         /// <summary>
-        ///  Required method for Designer support - do not modify
-        ///  the contents of this method with the code editor.
+        /// Required method for Designer support - do not modify
+        /// the contents of this method with the code editor.
         /// </summary>
         private void InitializeComponent()
         {
-            label1 = new Label();
+            Btn_BackToStart = new Button();
             SuspendLayout();
             // 
-            // label1
+            // Btn_BackToStart
             // 
-            label1.AutoSize = true;
-            label1.Location = new Point(155, 61);
-            label1.Name = "label1";
-            label1.Size = new Size(38, 15);
-            label1.TabIndex = 0;
-            label1.Text = "label1";
+            Btn_BackToStart.Location = new Point(12, 415);
+            Btn_BackToStart.Name = "Btn_BackToStart";
+            Btn_BackToStart.Size = new Size(75, 23);
+            Btn_BackToStart.TabIndex = 0;
+            Btn_BackToStart.Text = "Back";
+            Btn_BackToStart.UseVisualStyleBackColor = true;
+            Btn_BackToStart.Click += Btn_BackToStart_Click;
             // 
-            // Form1
+            // StatsForm
             // 
             AutoScaleDimensions = new SizeF(7F, 15F);
             AutoScaleMode = AutoScaleMode.Font;
             ClientSize = new Size(800, 450);
-            Controls.Add(label1);
-            Name = "Form1";
-            Text = "Form1";
+            Controls.Add(Btn_BackToStart);
+            Name = "StatsForm";
+            StartPosition = FormStartPosition.CenterScreen;
+            Text = "Stats";
+            FormClosed += AppClose;
             ResumeLayout(false);
-            PerformLayout();
         }
 
         #endregion
 
-        private Label label1;
+        private Button Btn_BackToStart;
     }
 }
