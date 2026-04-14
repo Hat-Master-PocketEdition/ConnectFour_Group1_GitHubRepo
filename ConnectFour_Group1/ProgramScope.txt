@@ -1,0 +1,12 @@
+This is the Main Page for us Developers to place the scope of our Programs concept.
+
+We can Map Forms, what the Forms do, Data Structures, and any other concepts we want to dump here.
+Especially tips and concepts for between the team.
+
+We will update either via personal time (Thought Dumps) or Meeting Notes from whomever wants to add them.
+==========================================
+
+Meeting 0 : BrainStorm (04/14/2026)
+====================================
+Insert Meeting 0 Notes
+====================================
