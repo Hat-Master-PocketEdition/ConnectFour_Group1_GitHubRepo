@@ -19,7 +19,7 @@ namespace ConnectFour_Group1
         public PvPForm()
         {
             InitializeComponent();
-            DrawBoard(GameBoard);
+            InitializeBoard(GameBoard);
         }
 
         private void AppClose(object sender, FormClosedEventArgs e)
@@ -34,7 +34,7 @@ namespace ConnectFour_Group1
             this.Hide();
         }
 
-        private void DrawBoard(PictureBox[,] board)
+        private void InitializeBoard(PictureBox[,] board)
         {
 
             for(int x = 0; x < 7; x++)
@@ -44,10 +44,11 @@ namespace ConnectFour_Group1
                     board[x, y] = new PictureBox();
 
                     Debug.WriteLine("COORDS: " + x + ", " + y);
+
                     board[x, y].Image = Image.FromFile(@"../../Resources/YellowChip.png");
                     board[x, y].Size = new Size(80, 80);
                     board[x, y].Location = new Point(x * 85, y * 85);
-                    board[x, y].BorderStyle = BorderStyle.FixedSingle;
+                    board[x, y].BorderStyle = BorderStyle.None;
 
                     this.Controls.Add(board[x, y]);
                 }
