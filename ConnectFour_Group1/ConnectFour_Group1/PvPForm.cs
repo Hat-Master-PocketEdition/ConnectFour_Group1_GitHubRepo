@@ -15,22 +15,31 @@ namespace ConnectFour_Group1
     public partial class PvPForm : Form
     {
         int CurrentPlayer = 1;
-        PictureBox[,] GameBoard = new PictureBox[7, 6];
+
+        Board GameBoard = new Board();
+
+
+        //these could be hard coded to just red and yellow without using variables 
+        //but i thought it might be cool to come back and allow players to pick
+        //their own colors later on. Plus it doesn't hurt to have them here if
+        //we never get/got to it.
         Image PlayerOneColor = Image.FromFile(@"../../Resources/RedChip.png");
         Image PlayerTwoColor = Image.FromFile(@"../../Resources/YellowChip.png");
         Image CurrentPlayerColor;
+
+
         int[,] CodeBoard = new int[7, 6];
         public PvPForm()
         {
             InitializeComponent();
-            InitializeBoard(GameBoard);
-        }
+            Board GameBoard = new Board(this, Image.FromFile(@"../../Resources/BlackChip.png"));
 
+            //InitializeBoard(GameBoard);
+        }
         private void AppClose(object sender, FormClosedEventArgs e)
         {
             Application.Exit();
         }
-
         private void Btn_BackToStart_Click(object sender, EventArgs e)
         {
             StartForm load = new StartForm();
@@ -38,54 +47,60 @@ namespace ConnectFour_Group1
             this.Hide();
         }
 
-        private void InitializeBoard(PictureBox[,] board)
-        {
-            //This Function creates the visuals for the gameboard
-            //using a nested for-loop
-            //This is only used for the spawning each cell of the
-            //game board
+        //This is a relic of before the Board and Cell class existed.
+        //Keeping it just in case (for now)
+        //Note to self: delete all this before uploading
 
-            //AW
+        //private void InitializeBoard(PictureBox[,] board)
+        //{
+        //    //This Function creates the visuals for the gameboard
+        //    //using a nested for-loop
+        //    //This is only used for the spawning each cell of the
+        //    //game board
 
-            CurrentPlayerColor = PlayerOneColor;
-            for (int x = 0; x < 7; x++)
-            {
-                for (int y = 0; y < 6; y++)
-                {
+        //    //AW
 
-                    board[x, y] = new PictureBox();
+        //    CurrentPlayerColor = PlayerOneColor;
+        //    for (int x = 0; x < 7; x++)
+        //    {
+        //        for (int y = 0; y < 6; y++)
+        //        {
 
-                    board[x, y].Image = Image.FromFile(@"../../Resources/BlackChip.png");
-                    board[x, y].Size = new Size(40, 40);
-                    board[x, y].Location = new Point(200 + (x * 48), 300 + (-y * 44));
-                    board[x, y].Cursor = Cursors.Hand;
-                    board[x, y].BorderStyle = BorderStyle.None;
-                    board[x, y].Name = x + ", " + y;
+        //            board[x, y] = new PictureBox();
 
-                    board[x, y].MouseEnter += new EventHandler(MouseEnter);
-                    board[x, y].MouseLeave += new EventHandler(MouseLeave);
-                    board[x, y].Click += new EventHandler(PictureBox_Clicked);
+        //            board[x, y].Image = Image.FromFile(@"../../Resources/BlackChip.png");
+        //            board[x, y].Size = new Size(40, 40);
+        //            board[x, y].Location = new Point(200 + (x * 48), 300 + (-y * 44));
+        //            board[x, y].Cursor = Cursors.Hand;
+        //            board[x, y].BorderStyle = BorderStyle.None;
+        //            board[x, y].Name = x + ", " + y;
 
-                    this.Controls.Add(board[x, y]);
+        //            board[x, y].MouseEnter += new EventHandler(MouseEnter);
+        //            board[x, y].MouseLeave += new EventHandler(MouseLeave);
+        //            board[x, y].Click += new EventHandler(PictureBox_Clicked);
 
-                    CodeBoard[x, y] = 0;
-                }
-            }
-        }
+        //            this.Controls.Add(board[x, y]);
+
+        //            CodeBoard[x, y] = 0;
+        //        }
+        //    }
+        //}
 
         private void PictureBox_Clicked(object sender, EventArgs e)
         {
-            PictureBox Pic = sender as PictureBox;
+            Cell curCell = sender as Cell;
 
             //reverse-engineering the location data to get the 2d array
             //coordinates of the PictureBox array the cursor clicked.
-            int x = (Pic.Location.X - 200) / 48;
-            int y = -(Pic.Location.Y - 300) / 44;
+
+            int[,] coordinates = curCell.Getlocation();
+            //int x = (Pic.Location.X - 200) / 48;
+            //int y = -(Pic.Location.Y - 300) / 44;
 
             //we can use that X and Y data to translate it to CodeBoard
             //GameBoard[] and CodeBoard[] are set up the exact same way, so we
             //basically we swap out RedChip.png and YellowChip.png for 1 and 2
-            DropChip(CurrentPlayerColor, CurrentPlayer, x, y);
+            DropChip(CurrentPlayerColor, CurrentPlayer, coordinates);
             MouseEnter(sender, e);
         }
 
@@ -117,21 +132,27 @@ namespace ConnectFour_Group1
                 {
                     if (CodeBoard[x, y] == 0)
                     {
-                        GameBoard[x, y].Image = Image.FromFile(@"../../Resources/BlackChip.png");
+                        GameBoard.At(x, y).Image = Image.FromFile(@"../../Resources/BlackChip.png");
                     }
                     else if (CodeBoard[x, y] == 1)
                     {
-                        GameBoard[x, y].Image = Image.FromFile(@"../../Resources/RedChip.png");
+                        GameBoard.At(x, y).Image = Image.FromFile(@"../../Resources/RedChip.png");
                     }
                     else if (CodeBoard[x, y] == 2)
                     {
-                        GameBoard[x, y].Image = Image.FromFile(@"../../Resources/YellowChip.png");
+                        GameBoard.At(x, y).Image = Image.FromFile(@"../../Resources/YellowChip.png");
                     }
                 }
             }
         }
-        private void DropChip(Image color, int player, int x, int y)
+        private void DropChip(Image color, int player, int[,]coords)
         {
+            int x = coords[0, 0];
+            int y = coords[1, 1];
+
+            Debug.WriteLine(x + ", " + y);
+
+
             //This function handles the dropping of a player's chip
             //it traverses a collumn of CodeBoard until it finds an
             //open spot that "obeys the laws of gravity."
@@ -229,7 +250,7 @@ namespace ConnectFour_Group1
                 {
                     Debug.WriteLine("2");
 
-                    GameBoard[x, startY].Image = color;
+                    GameBoard.At(x, startY).Image = color;
 
                     break;
 
@@ -240,7 +261,7 @@ namespace ConnectFour_Group1
 
                     //startY has fallen and found another chip
                     //we will place it on top of that chip
-                    GameBoard[x, startY].Image = color;
+                    GameBoard.At(x, startY).Image = color;
 
                     break;
                 }
@@ -250,7 +271,7 @@ namespace ConnectFour_Group1
 
                     //startY has fallen and found another chip
                     //we will place it on top of that chip
-                    GameBoard[x, startY].Image = color;
+                    GameBoard.At(x, startY).Image = color;
 
                     break;
                 }
@@ -295,7 +316,6 @@ namespace ConnectFour_Group1
                 CurrentPlayerColor = PlayerOneColor;
             }
             Debug.WriteLine("CHANGES COMPLETE");
-            //RedrawGameBoard();
 
         }
     }
