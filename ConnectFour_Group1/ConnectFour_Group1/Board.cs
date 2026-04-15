@@ -182,7 +182,7 @@ namespace ConnectFour_Group1
             }
             if (ValidMove)
             {
-                Debug.WriteLine("VALID MOVE");
+                //Debug.WriteLine("VALID MOVE");
                 NextPlayerTurn();
             }
             RedrawGameBoard();
@@ -314,23 +314,23 @@ namespace ConnectFour_Group1
                     if (superY > 0 && CodeBoard[playedSpotX, superY - 1] == currentPlayer)
                     {
                         chain++;
-                        Debug.WriteLine("VERTICAL CHAIN: " + chain);
+                        //Debug.WriteLine("VERTICAL CHAIN: " + chain);
                         superY--;
                     }
                     else
                     {
                         keepGoing = false;
-                        Debug.WriteLine("VERTICAL CHAIN: " + chain + ", STOPPING");
+                        //Debug.WriteLine("VERTICAL CHAIN: " + chain + ", STOPPING");
                     }
                 }
                 if (chain >= 4)
                 {
-                    Debug.WriteLine("chain: " + chain + ", " + "returned TRUE for PLAYER " + currentPlayer);
+                    Debug.WriteLine("chain: " + chain + ", " + "returned WIN for PLAYER " + currentPlayer);
                     return true;
                 }
                 else
                 {
-                    Debug.WriteLine(" VERTICAL CHAIN: " + chain + ", MOVING ON");
+                    Debug.WriteLine("VERTICAL CHAIN:  " + chain + ", MOVING ON");
 
 
                     //return false;
@@ -342,7 +342,6 @@ namespace ConnectFour_Group1
                 chain = 1;
                 keepGoing = true;
             }
-
             //check for EAST and WEST
             {
                 //This is WEST
@@ -354,13 +353,13 @@ namespace ConnectFour_Group1
                         if (superX > 0 && CodeBoard[superX - 1, playedSpotY] == currentPlayer)
                         {
                             chain++;
-                            Debug.WriteLine("WEST CHAIN: " + chain);
+                            //Debug.WriteLine("WEST CHAIN: " + chain);
                             superX--;
                         }
                         else
                         {
                             keepGoing = false;
-                            Debug.WriteLine("WEST CHAIN: " + chain + ", STOPPING");
+                            //Debug.WriteLine("WEST CHAIN: " + chain + ", STOPPING");
                         }
                     }
                 }
@@ -380,13 +379,13 @@ namespace ConnectFour_Group1
                         if (superY > 0 && CodeBoard[superX + 1, playedSpotY] == currentPlayer)
                         {
                             chain++;
-                            Debug.WriteLine("EAST CHAIN: " + chain);
+                            //Debug.WriteLine("EAST CHAIN: " + chain);
                             superX++;
                         }
                         else
                         {
                             keepGoing = false;
-                            Debug.WriteLine("EAST CHAIN: " + chain + ", STOPPING");
+                            //Debug.WriteLine("EAST CHAIN: " + chain + ", STOPPING");
                         }
                     }
                 }
@@ -394,7 +393,7 @@ namespace ConnectFour_Group1
                 //This is EAST-WEST CHECKING
                 if (chain >= 4)
                 {
-                    Debug.WriteLine("EAST-WEST chain: " + chain + ", " + "returned TRUE for PLAYER " + currentPlayer);
+                    Debug.WriteLine("EAST-WEST chain: " + chain + ", " + "returned WIN for PLAYER " + currentPlayer);
                     return true;
                 }
                 else
@@ -420,14 +419,14 @@ namespace ConnectFour_Group1
                         if (superY > 0 && CodeBoard[superX - 1, superY - 1] == currentPlayer)
                         {
                             chain++;
-                            Debug.WriteLine("SouthWest CHAIN: " + chain);
+                            //Debug.WriteLine("SouthWest CHAIN: " + chain);
                             superY--;
                             superX--;
                         }
                         else
                         {
                             keepGoing = false;
-                            Debug.WriteLine("SouthWest CHAIN: " + chain + ", STOPPING");
+                            //Debug.WriteLine("SouthWest CHAIN: " + chain + ", STOPPING");
                         }
                     }
                 }
@@ -447,14 +446,14 @@ namespace ConnectFour_Group1
                         if (superY > 0 && CodeBoard[superX + 1, superY + 1] == currentPlayer)
                         {
                             chain++;
-                            Debug.WriteLine("NorthEast CHAIN: " + chain);
+                            //Debug.WriteLine("NorthEast CHAIN: " + chain);
                             superY++;
                             superX++;
                         }
                         else
                         {
                             keepGoing = false;
-                            Debug.WriteLine("NorthEast CHAIN: " + chain + ", STOPPING");
+                            //Debug.WriteLine("NorthEast CHAIN: " + chain + ", STOPPING");
                         }
                     }
                 }
@@ -462,12 +461,13 @@ namespace ConnectFour_Group1
                 //This is SOUTHEAST-NORTHWEST DIAGONAL
                 if (chain >= 4)
                 {
-                    Debug.WriteLine("SouthEast-NorthWest chain: " + chain + ", " + "returned TRUE for PLAYER " + currentPlayer);
+                                  
+                    Debug.WriteLine("NE-SW CHAIN:     " + chain + ", " + "returned WIN for PLAYER " + currentPlayer);
                     return true;
                 }
                 else
                 {
-                    Debug.WriteLine("SouthEast-NorthWest CHAIN: " + chain + ", MOVING ON");
+                    Debug.WriteLine("NE-SW CHAIN:     " + chain + ", MOVING ON");
                     //return false;
                 }
 
@@ -488,14 +488,14 @@ namespace ConnectFour_Group1
                         if (superY > 0 && CodeBoard[superX + 1, superY - 1] == currentPlayer)
                         {
                             chain++;
-                            Debug.WriteLine("SouthEast CHAIN: " + chain);
+                            //Debug.WriteLine("SouthEast CHAIN: " + chain);
                             superY--;
                             superX++;
                         }
                         else
                         {
                             keepGoing = false;
-                            Debug.WriteLine("SouthEast CHAIN: " + chain + ", STOPPING");
+                            //Debug.WriteLine("SouthEast CHAIN: " + chain + ", STOPPING");
                         }
                     }
                 }
@@ -516,26 +516,26 @@ namespace ConnectFour_Group1
                         if (superY > 0 && CodeBoard[superX - 1, superY + 1] == currentPlayer)
                         {
                             chain++;
-                            Debug.WriteLine("NorthWest CHAIN: " + chain);
+                            //Debug.WriteLine("NorthWest CHAIN: " + chain);
                             superY++;
                             superX--;
                         }
                         else
                         {
                             keepGoing = false;
-                            Debug.WriteLine("NorthWest CHAIN: " + chain + ", STOPPING");
+                            //Debug.WriteLine("NorthWest CHAIN: " + chain + ", STOPPING");
                         }
                     }
                 }
                 //now we can check if chain wins
                 if (chain >= 4)
                 {
-                    Debug.WriteLine("SouthEast-NorthWest chain: " + chain + ", " + "returned TRUE for PLAYER " + currentPlayer);
+                    Debug.WriteLine("SE-NW CHAIN:     " + chain + ", " + "returned WIN for PLAYER " + currentPlayer);
                     return true;
                 }
                 else
                 {
-                    Debug.WriteLine("SouthEast-NorthWest CHAIN: " + chain + ", MOVING ON");
+                    Debug.WriteLine("SE-NW CHAIN:     " + chain + ", MOVING ON");
 
                     //since this is the last check in the loop, return false
                     return false;
@@ -555,30 +555,30 @@ namespace ConnectFour_Group1
 
             if (intentUD == "up" && superY + 1 > 6)
             {
-                Debug.WriteLine("superY + 1 = " + (superY + 1).ToString() + ", out of bounds");
+                //Debug.WriteLine("superY + 1 = " + (superY + 1).ToString() + ", out of bounds");
                 return false;
             }
             else if (intentUD == "down" && superY - 1 < 0)
             {
-                Debug.WriteLine("superY - 1 = " + (superY - 1).ToString() + ", out of bounds");
+                //Debug.WriteLine("superY - 1 = " + (superY - 1).ToString() + ", out of bounds");
                 return false;
             }
             else if (intentLR == "right" && superX + 1 > 5)
             {
-                Debug.WriteLine("superX + 1 = " + (superX + 1).ToString() + ", out of bounds");
+                //Debug.WriteLine("superX + 1 = " + (superX + 1).ToString() + ", out of bounds");
 
                 return false;
             }
             else if (intentLR == "left" && superX - 1 < 0)
             {
-                Debug.WriteLine("superX - 1 = " + (superX - 1).ToString() + ", out of bounds");
+                //Debug.WriteLine("superX - 1 = " + (superX - 1).ToString() + ", out of bounds");
 
                 return false;
             }
             else
             {
                 //if all those passed, then the array is still in bounds, return true;
-                Debug.WriteLine("no out of bounds detected");
+                //Debug.WriteLine("no out of bounds detected");
                 return true;
             }
         }
