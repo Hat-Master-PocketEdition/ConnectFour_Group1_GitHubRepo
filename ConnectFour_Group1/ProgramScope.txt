@@ -8,5 +8,75 @@ We will update either via personal time (Thought Dumps) or Meeting Notes from wh
 
 Meeting 0 : BrainStorm (04/14/2026)
 ====================================
-Insert Meeting 0 Notes
+Introductions, begun understanding skillsets and assigning work to the job.
+AW - Backend / AI + Game Plumbing
+AB - Frontend / Form Visuals and Namecase
+DS - Backend / ADS + Persistent Data
+
+Decided to use picture box for deciphering win states, AW pushed changes amidst meeting;
+Created Code Push chat on Discord, and Reference chat for any references for team usage.
+Debating on Recursion either Small Functions or loops. Ironing out Logic checks.
+High ambitions to get the project done.
+------------------------
+Code Etiquette:
+Comments, Simple to understand;
+CamelCase - Name case for Variables and other sorts;
+Push in Discord Chat;
+------------------------
+
+End Meeting 0 Notes
 ====================================
+
+DS - ADS Notes
+-----------------
+The structure for persistent data follows:
+
+Within the file "GameHist.txt" (will push the file come development/plumbing)
+The anatomy of the ADS of our history string is namecase first
+Time "T", Win Condition "W", Game-type "G", Move Count "M", Color-schema "C".
+The string will in theory be saved as:
+MM,DD,YYYY,0,P,#,01
+
+Delimiter is ','; Easy write and read. 
+Win Condition is based on 0 - Player 1;
+                          1 - Player 2;
+                          2 - AI;
+                          3 - Tie;
+
+Game-type are "P" for Player vs. Player, "C" for Player vs. Computer.
+Move Count is integer based, and will be used to display for the matter of "how many turns the game took".
+Color Schema is a str, that defines how the colors are assigned via integer reference in the string.
+The colors are <Color 1(Change me)>: 0; <Color 2(Change me)>: 1;
+Final point reference C is that it is order of player color
+"01" 0 - Player 1 Color; 1 - Player 2 Color;
+In parsing, it allows easy determining of who won, and what color was assigned.
+
+The only final piece would be to recreate the board, but that would be possibly too much memory reference, but could keep the state within
+a separate GameState file, but that may be too ambitious to project at hand.
+
+When we make the ListBox for the Statistics page, I will append it in singleline, and make a for loop to parse the ADS.
+I will also count player1 victories (since Player 2 is N player, and Project README states do not multiple)
+Then the accord becomes Computer victories, counting all the victories + total matches (line counter)
+Thus preparing the ratios that are required for statistic display.
+Percentages required are Computer Victories, and Player Victories.
+
+Ratios for Reference:
+(Victories / Game Total) * 100 = Victory Percentage;
+Push Forward to Front-end Statistic Form.
+
+4/14/2026 - DS; {} - Completed : xx/xx/xx - xx;
+
+(Requested Changes [Delete Me when Complete]: Color Schemes for the Game to replace)
+End ADS Notes
+
+--------------
+Following Project Notes:
+[Section 1; DS - 4/15/26]
+Project README states "forms to be opened in the same location"; If done, X this -> {}
+Note Section states "user chose to preview their game board", thus keep ONLY previous game; If done, X this -> {}
+Finally, audit the Note Section so we can get proper adherence to the standard imposed. 
+--------------
+===============================================
+Any other meetings: Unknown, confidence of team shows not necessary.
+Meeting 1: TBD;
+===============================================
