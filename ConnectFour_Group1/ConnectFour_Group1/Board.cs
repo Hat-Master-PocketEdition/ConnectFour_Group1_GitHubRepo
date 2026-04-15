@@ -34,7 +34,7 @@ namespace ConnectFour_Group1
             //this constructor takes a placeholder image to act as empty space in
             //the connect four grid
 
-            //CurrentPlayerColor = PlayerOneColor;
+            CurrentPlayerColor = PlayerOneColor;
             for (int x = 0; x < 7; x++)
             {
                 for (int y = 0; y < 6; y++)
@@ -58,9 +58,12 @@ namespace ConnectFour_Group1
                     board[x, y].BorderStyle = BorderStyle.None;
                     board[x, y].Name = x + ", " + y;
 
-                    board[x, y].SetCoords(x, y);
+                    board[x, y].SetX(x);
+                    board[x, y].SetY(y);
+                    
+                    Debug.WriteLine(board[x, y].GetX() + ", " + board[x, y].GetY());
+                    Debug.WriteLine(board[x, y].Name);
 
-                    Debug.WriteLine(board[x, y].GetCoords().ToString());
 
                     board[x, y].MouseEnter += MouseEnter;
                     board[x, y].MouseLeave += MouseLeave;
@@ -85,14 +88,16 @@ namespace ConnectFour_Group1
             //reverse-engineering the location data to get the 2d array
             //coordinates of the PictureBox array the cursor clicked.
 
-            int[,] coordinates = curCell.GetCoords();
+            int x = curCell.GetX();
+            int y = curCell.GetY();
+
             //int x = (Pic.Location.X - 200) / 48;
             //int y = -(Pic.Location.Y - 300) / 44;
 
             //we can use that X and Y data to translate it to CodeBoard
             //GameBoard[] and CodeBoard[] are set up the exact same way, so we
             //basically we swap out RedChip.png and YellowChip.png for 1 and 2
-            DropChip(CurrentPlayerColor, CurrentPlayer, coordinates);
+            DropChip(CurrentPlayerColor, CurrentPlayer, x, y);
             MouseEnter(sender, e);
         }
         private void MouseEnter(object sender, EventArgs e)
@@ -109,10 +114,8 @@ namespace ConnectFour_Group1
         {
             RedrawGameBoard();
         }
-        private void DropChip(Image color, int player, int[,] coords)
+        private void DropChip(Image color, int player, int x, int y)
         {
-            int x = coords[0, 0];
-            int y = coords[1, 1];
 
             Debug.WriteLine(x + ", " + y);
 
@@ -201,15 +204,6 @@ namespace ConnectFour_Group1
             int startY = 5;
             while (true)
             {
-                //if (CodeBoard[x, startY] != 0)
-                //{
-                //    Debug.WriteLine("1");
-
-                //    //this column is already filled up
-                //    //we cannot drop the chip here
-                //    //do nothing
-                //}
-                //else 
                 if (startY == 0)
                 {
                     //Debug.WriteLine("2");

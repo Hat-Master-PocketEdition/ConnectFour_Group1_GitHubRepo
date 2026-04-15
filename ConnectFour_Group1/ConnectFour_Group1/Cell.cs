@@ -13,7 +13,11 @@ namespace ConnectFour_Group1
     internal class Cell : PictureBox
     {
         private string value;
-        private int[,] coords;
+
+        //originally i tried to save this as a 2d array
+        //but it caused more issues than i thought it would
+        private int x;
+        private int y;
 
         public Cell()
         {
@@ -21,12 +25,16 @@ namespace ConnectFour_Group1
             //loading it with recognisable dummy data
             //that can be easily spotted.
             value = "icosahedron";
-            coords = new int[ 99, 99 ];
+            x = 99;
+            y = 99;
+            //coords = new int[ 99, 99 ];
         }
         public Cell(string value, int x, int y)
         {
             this.value = value;
-            this.coords = new int[ x, y ];
+            this.x = x;
+            this.y = y;
+            //this.coords = new int[ x, y ];
         }
 
 
@@ -35,17 +43,25 @@ namespace ConnectFour_Group1
         {
             return value;
         }
-        public int[,] GetCoords()
+        public int GetX()
         {
-            return coords;
+            return x;
+        }
+        public int GetY()
+        {
+            return y;
         }
         public void SetValue(string value)
         {
             this.value = value;
         }
-        public void SetCoords(int x, int y)
+        public void SetX(int x)
         {
-            this.coords = new int[x, y];
+            this.x = x;
+        }
+        public void SetY(int y)
+        {
+            this.y = y;
         }
 
     }
