@@ -16,15 +16,12 @@ namespace ConnectFour_Group1
     {
         Board GameBoard = new Board();
 
-        int CurrentPlayer = 1;
-
         //these could be hard coded to just red and yellow without using variables 
         //but i thought it might be cool to come back and allow players to pick
         //their own colors later on. Plus it doesn't hurt to have them here if
         //we never get/got to it.
         Image PlayerOneColor = Image.FromFile(@"../../Resources/RedChip.png");
         Image PlayerTwoColor = Image.FromFile(@"../../Resources/YellowChip.png");
-        Image CurrentPlayerColor;
         //CB -DS ----------
         //Two Colors is solid, then we just make randomized color + turn assignment;
         //I will define Color1 as Red; Color2 is Yellow for ADS + variable reference.

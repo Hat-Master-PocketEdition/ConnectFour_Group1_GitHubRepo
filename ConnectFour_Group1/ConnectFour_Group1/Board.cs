@@ -42,7 +42,7 @@ namespace ConnectFour_Group1
                     board[x, y] = new Cell("0", x, y);
 
                     //i think this location variable needs a little explaining
-                    //these numbers procedurally place the board in aproximately
+                    //these numbers procedurally place the board in approximately
                     //the center of the screen. if we ever decide to change the
                     //size of the form at some point in the future, I will need
                     //to manually change those values.
@@ -97,7 +97,7 @@ namespace ConnectFour_Group1
             //we can use that X and Y data to translate it to CodeBoard
             //GameBoard[] and CodeBoard[] are set up the exact same way, so we
             //basically we swap out RedChip.png and YellowChip.png for 1 and 2
-            DropChip(CurrentPlayerColor, CurrentPlayer, x, y);
+            DropChip(CurrentPlayer, x, y);
             MouseEnter(sender, e);
         }
         private void MouseEnter(object sender, EventArgs e)
@@ -105,23 +105,20 @@ namespace ConnectFour_Group1
             PictureBox Pic = sender as PictureBox;
             int x = (Pic.Location.X - 200) / 48;
             int y = -(Pic.Location.Y - 300) / 44;
-            Debug.WriteLine("MouseEnter");
-            Debug.WriteLine(x + ", " + y);
-            HoverChip(CurrentPlayerColor, CurrentPlayer, x, y);
-            Debug.WriteLine("MouseEnded");
+            HoverChip(CurrentPlayerColor, x);
         }
         private void MouseLeave(object sender, EventArgs e)
         {
             RedrawGameBoard();
         }
-        private void DropChip(Image color, int player, int x, int y)
+        private void DropChip(int player, int x, int y)
         {
 
             Debug.WriteLine(x + ", " + y);
 
 
             //This function handles the dropping of a player's chip
-            //it traverses a collumn of CodeBoard until it finds an
+            //it traverses a column of CodeBoard until it finds an
             //open spot that "obeys the laws of gravity."
 
             bool ValidMove = false;
@@ -190,10 +187,9 @@ namespace ConnectFour_Group1
             }
             RedrawGameBoard();
             PrintCodeBoardToConsole();
-
-
+            WinStateChecking(x, startY, player);
         }
-        private void HoverChip(Image color, int player, int x, int y)
+        private void HoverChip(Image color, int x)
         {
             //HoverChip is a carbon copy of Drop Chip with some slight differences
             //and both vary from each other a lot with changes that came after
@@ -284,18 +280,307 @@ namespace ConnectFour_Group1
         {
             if (CurrentPlayer == 1)
             {
-                Debug.WriteLine("CHANGING TO PLAYER 2");
                 CurrentPlayer = 2;
                 CurrentPlayerColor = PlayerTwoColor;
             }
             else if (CurrentPlayer == 2)
             {
-                Debug.WriteLine("CHANGING TO PLAYER 1");
                 CurrentPlayer = 1;
                 CurrentPlayerColor = PlayerOneColor;
             }
-            Debug.WriteLine("CHANGES COMPLETE");
 
+        }
+        private bool WinStateChecking(int playedSpotX, int playedSpotY, int currentPlayer)
+        {
+            //AW
+            
+            //The following function is divided into four segments via brackets
+            //each segment searches for how many chips are in-a-row in their
+            //given direction.
+
+
+            //First, we will check if we have a 4-in-a-row in the single column
+            //we only need to check downwards because nothing can be above
+            //the chip we just dropped
+            int superY = playedSpotY;
+            int superX = playedSpotX;
+            int chain = 1;
+            bool keepGoing = true;
+
+            //check for DIRECTLY BELOW
+            {
+                while (keepGoing)
+                {
+                    if (superY > 0 && CodeBoard[playedSpotX, superY - 1] == currentPlayer)
+                    {
+                        chain++;
+                        Debug.WriteLine("VERTICAL CHAIN: " + chain);
+                        superY--;
+                    }
+                    else
+                    {
+                        keepGoing = false;
+                        Debug.WriteLine("VERTICAL CHAIN: " + chain + ", STOPPING");
+                    }
+                }
+                if (chain >= 4)
+                {
+                    Debug.WriteLine("chain: " + chain + ", " + "returned TRUE for PLAYER " + currentPlayer);
+                    return true;
+                }
+                else
+                {
+                    Debug.WriteLine(" VERTICAL CHAIN: " + chain + ", MOVING ON");
+
+
+                    //return false;
+                }
+
+
+                //reset all values because each check is separate from the others
+                superY = playedSpotY;
+                chain = 1;
+                keepGoing = true;
+            }
+
+            //check for EAST and WEST
+            {
+                //This is WEST
+                while (keepGoing)
+                {
+                    keepGoing = CheckIfArrayInBounds(superX, superY, "none", "left");
+                    if (keepGoing)
+                    {
+                        if (superX > 0 && CodeBoard[superX - 1, playedSpotY] == currentPlayer)
+                        {
+                            chain++;
+                            Debug.WriteLine("WEST CHAIN: " + chain);
+                            superX--;
+                        }
+                        else
+                        {
+                            keepGoing = false;
+                            Debug.WriteLine("WEST CHAIN: " + chain + ", STOPPING");
+                        }
+                    }
+                }
+                //the previous only checks for West
+                //reset all the values except for chain
+                //because the previous chain still carries over
+                keepGoing = true;
+                superY = playedSpotY;
+                superX = playedSpotX;
+                //same loop, just inverting the axis 
+                //This is EAST
+                while (keepGoing)
+                {
+                    keepGoing = CheckIfArrayInBounds(superX, superY, "none", "right");
+                    if (keepGoing == true)
+                    {
+                        if (superY > 0 && CodeBoard[superX + 1, playedSpotY] == currentPlayer)
+                        {
+                            chain++;
+                            Debug.WriteLine("EAST CHAIN: " + chain);
+                            superX++;
+                        }
+                        else
+                        {
+                            keepGoing = false;
+                            Debug.WriteLine("EAST CHAIN: " + chain + ", STOPPING");
+                        }
+                    }
+                }
+                //now we can check if chain wins
+                //This is EAST-WEST CHECKING
+                if (chain >= 4)
+                {
+                    Debug.WriteLine("EAST-WEST chain: " + chain + ", " + "returned TRUE for PLAYER " + currentPlayer);
+                    return true;
+                }
+                else
+                {
+                    Debug.WriteLine("EAST-WEST CHAIN: " + chain + ", MOVING ON");
+                    //return false;
+                }
+
+                //reset all values because each check is separate from the others
+                superY = playedSpotY;
+                superX = playedSpotX;
+                chain = 1;
+                keepGoing = true;
+            }
+            //check for the SOUTHWEST and NORTHEAST diagonals
+            {
+                //This is SOUTHWEST DIAGONAL
+                while (keepGoing)
+                {
+                    keepGoing = CheckIfArrayInBounds(superX, superY, "down", "left");
+                    if (keepGoing)
+                    {
+                        if (superY > 0 && CodeBoard[superX - 1, superY - 1] == currentPlayer)
+                        {
+                            chain++;
+                            Debug.WriteLine("SouthWest CHAIN: " + chain);
+                            superY--;
+                            superX--;
+                        }
+                        else
+                        {
+                            keepGoing = false;
+                            Debug.WriteLine("SouthWest CHAIN: " + chain + ", STOPPING");
+                        }
+                    }
+                }
+                //the previous only checks for SouthWest
+                //reset all the values except for chain
+                //because the previous chain still carries over
+                keepGoing = true;
+                superY = playedSpotY;
+                superX = playedSpotX;
+                //same loop, just inverting the axis 
+                //This is NORTHEAST DIAGONAL
+                while (keepGoing)
+                {
+                    keepGoing = CheckIfArrayInBounds(superX, superY, "up", "right");
+                    if (keepGoing == true)
+                    {
+                        if (superY > 0 && CodeBoard[superX + 1, superY + 1] == currentPlayer)
+                        {
+                            chain++;
+                            Debug.WriteLine("NorthEast CHAIN: " + chain);
+                            superY++;
+                            superX++;
+                        }
+                        else
+                        {
+                            keepGoing = false;
+                            Debug.WriteLine("NorthEast CHAIN: " + chain + ", STOPPING");
+                        }
+                    }
+                }
+                //now we can check if chain wins
+                //This is SOUTHEAST-NORTHWEST DIAGONAL
+                if (chain >= 4)
+                {
+                    Debug.WriteLine("SouthEast-NorthWest chain: " + chain + ", " + "returned TRUE for PLAYER " + currentPlayer);
+                    return true;
+                }
+                else
+                {
+                    Debug.WriteLine("SouthEast-NorthWest CHAIN: " + chain + ", MOVING ON");
+                    //return false;
+                }
+
+                //reset all values because each check is separate from the others
+                superY = playedSpotY;
+                superX = playedSpotX;
+                chain = 1;
+                keepGoing = true;
+            }
+            //check for the SOUTHEAST and NORTHWEST diagonals
+            {
+                //This is SOUTHEAST DIAGONAL
+                while (keepGoing)
+                {
+                    keepGoing = CheckIfArrayInBounds(superX, superY, "down", "right");
+                    if (keepGoing)
+                    {
+                        if (superY > 0 && CodeBoard[superX + 1, superY - 1] == currentPlayer)
+                        {
+                            chain++;
+                            Debug.WriteLine("SouthEast CHAIN: " + chain);
+                            superY--;
+                            superX++;
+                        }
+                        else
+                        {
+                            keepGoing = false;
+                            Debug.WriteLine("SouthEast CHAIN: " + chain + ", STOPPING");
+                        }
+                    }
+                }
+                //the previous only checks for SouthEast
+                //reset all the values except for chain
+                //because the previous chain still carries over
+                keepGoing = true;
+                superY = playedSpotY;
+                superX = playedSpotX;
+
+                //same loop, just inverting the axis
+                //This is NORTHWEST DIAGONAL
+                while (keepGoing)
+                {
+                    keepGoing = CheckIfArrayInBounds(superX, superY, "up", "left");
+                    if (keepGoing == true)
+                    {
+                        if (superY > 0 && CodeBoard[superX - 1, superY + 1] == currentPlayer)
+                        {
+                            chain++;
+                            Debug.WriteLine("NorthWest CHAIN: " + chain);
+                            superY++;
+                            superX--;
+                        }
+                        else
+                        {
+                            keepGoing = false;
+                            Debug.WriteLine("NorthWest CHAIN: " + chain + ", STOPPING");
+                        }
+                    }
+                }
+                //now we can check if chain wins
+                if (chain >= 4)
+                {
+                    Debug.WriteLine("SouthEast-NorthWest chain: " + chain + ", " + "returned TRUE for PLAYER " + currentPlayer);
+                    return true;
+                }
+                else
+                {
+                    Debug.WriteLine("SouthEast-NorthWest CHAIN: " + chain + ", MOVING ON");
+
+                    //since this is the last check in the loop, return false
+                    return false;
+                }
+            }
+        }
+        
+        public bool CheckIfArrayInBounds(int superX, int superY, string intentUD, string intentLR)
+        {
+            //these if-statements ensure the hypothetical pointer never goes out-of-bounds
+            //from the array
+
+            //intent is just which direction the "pointer" would be going, with UD = UpDown and LR = LeftRight
+            //example: diagonal NorthWest would be intentUD = "up" and intentLR = "left"
+            //this was done because certain movements skirt right across the edge of the board, and they would
+            //constantly be caught 
+
+            if (intentUD == "up" && superY + 1 > 6)
+            {
+                Debug.WriteLine("superY + 1 = " + (superY + 1).ToString() + ", out of bounds");
+                return false;
+            }
+            else if (intentUD == "down" && superY - 1 < 0)
+            {
+                Debug.WriteLine("superY - 1 = " + (superY - 1).ToString() + ", out of bounds");
+                return false;
+            }
+            else if (intentLR == "right" && superX + 1 > 5)
+            {
+                Debug.WriteLine("superX + 1 = " + (superX + 1).ToString() + ", out of bounds");
+
+                return false;
+            }
+            else if (intentLR == "left" && superX - 1 < 0)
+            {
+                Debug.WriteLine("superX - 1 = " + (superX - 1).ToString() + ", out of bounds");
+
+                return false;
+            }
+            else
+            {
+                //if all those passed, then the array is still in bounds, return true;
+                Debug.WriteLine("no out of bounds detected");
+                return true;
+            }
         }
     }
 }
