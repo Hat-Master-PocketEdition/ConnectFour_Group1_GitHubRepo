@@ -13,7 +13,7 @@ namespace ConnectFour_Group1
     internal class Cell : PictureBox
     {
         private string value;
-        private int[,] location;
+        private int[,] coords;
 
         public Cell()
         {
@@ -21,12 +21,12 @@ namespace ConnectFour_Group1
             //loading it with recognisable dummy data
             //that can be easily spotted.
             value = "icosahedron";
-            location = new int[ 99, 99 ];
+            coords = new int[ 99, 99 ];
         }
         public Cell(string value, int x, int y)
         {
             this.value = value;
-            this.location = new int[ x, y ];
+            this.coords = new int[ x, y ];
         }
 
 
@@ -35,17 +35,17 @@ namespace ConnectFour_Group1
         {
             return value;
         }
-        public int[,] Getlocation()
+        public int[,] GetCoords()
         {
-            return location;
+            return coords;
         }
         public void SetValue(string value)
         {
             this.value = value;
         }
-        public void SetLocation(int[,] location)
+        public void SetCoords(int x, int y)
         {
-            this.location = location;
+            this.coords = new int[x, y];
         }
 
     }

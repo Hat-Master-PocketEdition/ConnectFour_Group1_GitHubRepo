@@ -14,10 +14,9 @@ namespace ConnectFour_Group1
 {
     public partial class PvPForm : Form
     {
-        int CurrentPlayer = 1;
-
         Board GameBoard = new Board();
 
+        int CurrentPlayer = 1;
 
         //these could be hard coded to just red and yellow without using variables 
         //but i thought it might be cool to come back and allow players to pick
@@ -96,7 +95,7 @@ namespace ConnectFour_Group1
             //reverse-engineering the location data to get the 2d array
             //coordinates of the PictureBox array the cursor clicked.
 
-            int[,] coordinates = curCell.Getlocation();
+            int[,] coordinates = curCell.GetCoords();
             //int x = (Pic.Location.X - 200) / 48;
             //int y = -(Pic.Location.Y - 300) / 44;
 
@@ -147,6 +146,37 @@ namespace ConnectFour_Group1
                     }
                 }
             }
+        }
+        private void PrintCodeBoardToConsole()
+        {
+            Debug.WriteLine("");
+            for (int y = 6; y > 0; y--)
+            {
+                for (int x = 0; x < 7; x++)
+                {
+                    Debug.Write(CodeBoard[x, y - 1] + "");
+                }
+                Debug.WriteLine("");
+            }
+            Debug.WriteLine("");
+
+        }
+        private void NextPlayerTurn()
+        {
+            if (CurrentPlayer == 1)
+            {
+                Debug.WriteLine("CHANGING TO PLAYER 2");
+                CurrentPlayer = 2;
+                CurrentPlayerColor = PlayerTwoColor;
+            }
+            else if (CurrentPlayer == 2)
+            {
+                Debug.WriteLine("CHANGING TO PLAYER 1");
+                CurrentPlayer = 1;
+                CurrentPlayerColor = PlayerOneColor;
+            }
+            Debug.WriteLine("CHANGES COMPLETE");
+
         }
         private void DropChip(Image color, int player, int[,]coords)
         {
@@ -290,36 +320,6 @@ namespace ConnectFour_Group1
 
             }
         }
-        private void PrintCodeBoardToConsole()
-        {
-            Debug.WriteLine("");
-            for (int y = 6; y > 0; y--)
-            {
-                for (int x = 0; x < 7; x++)
-                {
-                    Debug.Write(CodeBoard[x, y - 1] + "");
-                }
-                Debug.WriteLine("");
-            }
-            Debug.WriteLine("");
-
-        }
-        private void NextPlayerTurn()
-        {
-            if(CurrentPlayer == 1)
-            {
-                Debug.WriteLine("CHANGING TO PLAYER 2");
-                CurrentPlayer = 2;
-                CurrentPlayerColor = PlayerTwoColor;
-            }
-            else if (CurrentPlayer == 2)
-            {
-                Debug.WriteLine("CHANGING TO PLAYER 1");
-                CurrentPlayer = 1;
-                CurrentPlayerColor = PlayerOneColor;
-            }
-            Debug.WriteLine("CHANGES COMPLETE");
-
-        }
+ 
     }
 }
