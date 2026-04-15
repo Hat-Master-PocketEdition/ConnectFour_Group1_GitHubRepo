@@ -29,8 +29,6 @@
         private void InitializeComponent()
         {
             Btn_BackToStart = new Button();
-            TestPictureBox = new PictureBox();
-            ((System.ComponentModel.ISupportInitialize)TestPictureBox).BeginInit();
             SuspendLayout();
             // 
             // Btn_BackToStart
@@ -43,35 +41,21 @@
             Btn_BackToStart.UseVisualStyleBackColor = true;
             Btn_BackToStart.Click += Btn_BackToStart_Click;
             // 
-            // TestPictureBox
-            // 
-            TestPictureBox.Location = new Point(637, 278);
-            TestPictureBox.Name = "TestPictureBox";
-            TestPictureBox.Size = new Size(40, 40);
-            TestPictureBox.TabIndex = 1;
-            TestPictureBox.TabStop = false;
-            TestPictureBox.Click += TestPictureBox_Click;
-            TestPictureBox.MouseEnter += MouseEnter;
-            TestPictureBox.MouseLeave += MouseLeave;
-            // 
             // PvPForm
             // 
             AutoScaleDimensions = new SizeF(7F, 15F);
             AutoScaleMode = AutoScaleMode.Font;
             ClientSize = new Size(800, 450);
-            Controls.Add(TestPictureBox);
             Controls.Add(Btn_BackToStart);
             Name = "PvPForm";
             StartPosition = FormStartPosition.CenterScreen;
             Text = "Connect Four - Player vs. Player";
             FormClosed += AppClose;
-            ((System.ComponentModel.ISupportInitialize)TestPictureBox).EndInit();
             ResumeLayout(false);
         }
 
         #endregion
 
         private Button Btn_BackToStart;
-        private PictureBox TestPictureBox;
     }
 }

@@ -14,14 +14,16 @@ namespace ConnectFour_Group1
 {
     public partial class PvPForm : Form
     {
-        Image Highlighter = Image.FromFile(@"../../Resources/PurpleChip.png");
+        int CurrentPlayer = 1;
         PictureBox[,] GameBoard = new PictureBox[7, 6];
+        Image PlayerOneColor = Image.FromFile(@"../../Resources/RedChip.png");
+        Image PlayerTwoColor = Image.FromFile(@"../../Resources/YellowChip.png");
+        Image CurrentPlayerColor;
         int[,] CodeBoard = new int[7, 6];
         public PvPForm()
         {
             InitializeComponent();
             InitializeBoard(GameBoard);
-            TestPictureBox.Image = Image.FromFile(@"../../Resources/BlackChip.png");
         }
 
         private void AppClose(object sender, FormClosedEventArgs e)
@@ -45,10 +47,12 @@ namespace ConnectFour_Group1
 
             //AW
 
+            CurrentPlayerColor = PlayerOneColor;
             for (int x = 0; x < 7; x++)
             {
                 for (int y = 0; y < 6; y++)
                 {
+
                     board[x, y] = new PictureBox();
 
                     board[x, y].Image = Image.FromFile(@"../../Resources/BlackChip.png");
@@ -81,22 +85,30 @@ namespace ConnectFour_Group1
             //we can use that X and Y data to translate it to CodeBoard
             //GameBoard[] and CodeBoard[] are set up the exact same way, so we
             //basically we swap out RedChip.png and YellowChip.png for 1 and 2
-            DropChip("red", 1, x, y);
+            DropChip(CurrentPlayerColor, CurrentPlayer, x, y);
             MouseEnter(sender, e);
         }
 
         private void MouseEnter(object sender, EventArgs e)
         {
             PictureBox Pic = sender as PictureBox;
+            int x = (Pic.Location.X - 200) / 48;
+            int y = -(Pic.Location.Y - 300) / 44;
             //Pic.Image = Highlighter;
-            HoverChip("red", 1, (Pic.Location.X - 200) / 48, -(Pic.Location.Y - 300) / 44);
-        }
+            Debug.WriteLine("MouseEnter");
+            //Debug.WriteLine(CurrentPlayer);
+            //Debug.WriteLine(CurrentPlayerColor.ToString);
+            //Debug.WriteLine(Pic.Name);
+            //Debug.WriteLine((Pic.Location.X - 200) / 48);
+            Debug.WriteLine(x + ", " + y);
+            HoverChip(CurrentPlayerColor, CurrentPlayer, x, y);
+            Debug.WriteLine("MouseEnded");
 
+        }
         private void MouseLeave(object sender, EventArgs e)
         {
             RedrawGameBoard();
         }
-
         private void RedrawGameBoard()
         {
             for (int x = 0; x < 7; x++)
@@ -118,11 +130,14 @@ namespace ConnectFour_Group1
                 }
             }
         }
-        private void DropChip(string color, int player, int x, int y)
+        private void DropChip(Image color, int player, int x, int y)
         {
             //This function handles the dropping of a player's chip
             //it traverses a collumn of CodeBoard until it finds an
             //open spot that "obeys the laws of gravity."
+
+            bool ValidMove = false;
+
             int startY = 5;
             while (true)
             {
@@ -143,15 +158,32 @@ namespace ConnectFour_Group1
                     CodeBoard[x, startY] = player;
                     Debug.WriteLine("SAVED " + player + " TO CodeBoard[" + x + ", " + y + "]");
 
+                    ValidMove = true;
                     break;
 
                 }
                 else if (CodeBoard[x, startY - 1] == 1)
                 {
+                    //The spot below startY is occupied by player 1
+                    //place the chip here
+
                     Debug.WriteLine("WRITING");
                     CodeBoard[x, startY] = player;
                     Debug.WriteLine("SAVED " + player + " TO CodeBoard[" + x + ", " + startY + "]");
 
+                    ValidMove = true;
+                    break;
+                }
+                else if (CodeBoard[x, startY - 1] == 2)
+                {
+                    //The spot below startY is occupied by player 2
+                    //place the chip here
+
+                    Debug.WriteLine("WRITING");
+                    CodeBoard[x, startY] = player;
+                    Debug.WriteLine("SAVED " + player + " TO CodeBoard[" + x + ", " + startY + "]");
+
+                    ValidMove = true;
                     break;
                 }
                 else if (CodeBoard[x, startY] == 0)
@@ -163,12 +195,20 @@ namespace ConnectFour_Group1
                 }
 
             }
+            if (ValidMove)
+            {
+                Debug.WriteLine("VALID MOVE");
+                NextPlayerTurn();
+            }
             RedrawGameBoard();
-            //PrintCodeBoardToConsole();
+            PrintCodeBoardToConsole();
+
+
         }
-        private void HoverChip(string color, int player, int x, int y)
+        private void HoverChip(Image color, int player, int x, int y)
         {
-            //HoverChip() is a carbon copy of DropChip with some slight differences
+            //HoverChip is a carbon copy of DropChip with some slight differences
+            //and both vary from each other a lot with changes that came after
             //instead of handling placing chips, this manages the "hologram" that 
             //allows a player to preview their move
 
@@ -176,25 +216,41 @@ namespace ConnectFour_Group1
             int startY = 5;
             while (true)
             {
-                if (CodeBoard[x, startY] != 0)
-                {
-                    //this column is already filled up
-                    //we cannot drop the chip here
-                    //do nothing
-                }
-                else if (startY == 0)
-                {
+                //if (CodeBoard[x, startY] != 0)
+                //{
+                //    Debug.WriteLine("1");
 
-                    GameBoard[x, startY].Image = Image.FromFile(@"../../Resources/RedChip.png"); ;
+                //    //this column is already filled up
+                //    //we cannot drop the chip here
+                //    //do nothing
+                //}
+                //else 
+                if (startY == 0)
+                {
+                    Debug.WriteLine("2");
+
+                    GameBoard[x, startY].Image = color;
 
                     break;
 
                 }
                 else if (CodeBoard[x, startY - 1] == 1)
                 {
+                    Debug.WriteLine("3");
+
                     //startY has fallen and found another chip
                     //we will place it on top of that chip
-                    GameBoard[x, startY].Image = Image.FromFile(@"../../Resources/RedChip.png"); ;
+                    GameBoard[x, startY].Image = color;
+
+                    break;
+                }
+                else if (CodeBoard[x, startY - 1] == 2)
+                {
+                    Debug.WriteLine("3");
+
+                    //startY has fallen and found another chip
+                    //we will place it on top of that chip
+                    GameBoard[x, startY].Image = color;
 
                     break;
                 }
@@ -203,6 +259,8 @@ namespace ConnectFour_Group1
                     //there is empty space below the currently falling chip
 
                     //Debug.WriteLine("CodeBoard at [" + x + ", " + startY + "] is empty");
+                    Debug.WriteLine("4");
+
                     startY--;
                 }
 
@@ -222,10 +280,22 @@ namespace ConnectFour_Group1
             Debug.WriteLine("");
 
         }
-
-        private void TestPictureBox_Click(object sender, EventArgs e)
+        private void NextPlayerTurn()
         {
-            PrintCodeBoardToConsole();
+            if(CurrentPlayer == 1)
+            {
+                Debug.WriteLine("CHANGING TO PLAYER 2");
+                CurrentPlayer = 2;
+                CurrentPlayerColor = PlayerTwoColor;
+            }
+            else if (CurrentPlayer == 2)
+            {
+                Debug.WriteLine("CHANGING TO PLAYER 1");
+                CurrentPlayer = 1;
+                CurrentPlayerColor = PlayerOneColor;
+            }
+            Debug.WriteLine("CHANGES COMPLETE");
+            //RedrawGameBoard();
 
         }
     }
