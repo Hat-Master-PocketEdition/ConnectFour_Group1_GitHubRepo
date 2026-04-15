@@ -26,7 +26,10 @@ namespace ConnectFour_Group1
         Image PlayerOneColor = Image.FromFile(@"../../Resources/RedChip.png");
         Image PlayerTwoColor = Image.FromFile(@"../../Resources/YellowChip.png");
         Image CurrentPlayerColor;
-
+        //CB -DS ----------
+        //Two Colors is solid, then we just make randomized color + turn assignment;
+        //I will define Color1 as Red; Color2 is Yellow for ADS + variable reference.
+        //END CB-----------
 
         int[,] CodeBoard = new int[7, 6];
         public PvPForm()

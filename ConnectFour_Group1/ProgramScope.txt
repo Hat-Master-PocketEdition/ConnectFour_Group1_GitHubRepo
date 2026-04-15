@@ -46,9 +46,9 @@ Win Condition is based on 0 - Player 1;
 Game-type are "P" for Player vs. Player, "C" for Player vs. Computer.
 Move Count is integer based, and will be used to display for the matter of "how many turns the game took".
 Color Schema is a str, that defines how the colors are assigned via integer reference in the string.
-The colors are <Color 1(Change me)>: 0; <Color 2(Change me)>: 1;
+The colors are Red: 0; Yellow: 1;
 Final point reference C is that it is order of player color
-"01" 0 - Player 1 Color; 1 - Player 2 Color;
+"01" 0 - Player 1 Red; 1 - Player 2 Yellow;
 In parsing, it allows easy determining of who won, and what color was assigned.
 
 The only final piece would be to recreate the board, but that would be possibly too much memory reference, but could keep the state within
@@ -72,7 +72,7 @@ End ADS Notes
 --------------
 Following Project Notes:
 [Section 1; DS - 4/15/26]
-Project README states "forms to be opened in the same location"; If done, X this -> {}
+Project README states "forms to be opened in the same location"; If done, X this -> {X}
 Note Section states "user chose to preview their game board", thus keep ONLY previous game; If done, X this -> {}
 Finally, audit the Note Section so we can get proper adherence to the standard imposed. 
 --------------
