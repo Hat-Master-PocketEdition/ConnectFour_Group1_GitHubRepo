@@ -128,6 +128,37 @@ namespace ConnectFour_Group1
             entry += o.getColorSchema();
             return entry;
         }
+        public string filePath()
+        {
+            //Designate this as PATH for other Forms
+            string p = "../../Resources/GameHist.txt";
+            return p;
+        }
+        public void writeToFile(string e)
+        {
+            //Since Lists aren't on every form, we are going to run a while loop to count lines, and use for post for-loop to know where to add our latest game
+            //Since, you can't play backwards via time.
+            string p = filePath();
+            StreamReader fileAppend = new StreamReader(p);
+            string line = fileAppend.ReadLine();
+            int lineCount = 0;
+            while(line != null)
+            {
+                lineCount++;
+                line = fileAppend.ReadLine();
+            }    
+            for(int i = 0; i < lineCount; i++)
+            {
+                if (i == 0)
+                {
+                    File.AppendAllText(p, e);
+                }
+                else
+                {
+                    File.AppendAllText(p, Environment.NewLine + e);
+                }
+            }
+        }
         //==========E N D  U T I L I T Y  F U N C T I O N S=========
         //End -DS
     }

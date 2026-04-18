@@ -13,7 +13,11 @@ namespace ConnectFour_Group1
     {
         //The Board class is merely a vessel that contains
         //a 2D Cell array.
-        Cell[,] board = new Cell[7, 6];
+        //-DS Let's add private const int for better definition
+        //Also added numRows / numCols to For Loops for better control
+        private const int numRows = 7;
+        private const int numCols = 6;
+        Cell[,] board = new Cell[numRows, numCols];
 
         int CurrentPlayer = 1;
 
@@ -24,10 +28,13 @@ namespace ConnectFour_Group1
         Image PlayerOneColor = Image.FromFile(@"../../Resources/RedChip.png");
         Image PlayerTwoColor = Image.FromFile(@"../../Resources/YellowChip.png");
         Image CurrentPlayerColor;
-        int[,] CodeBoard = new int[7, 6];
+        //Reading through, how does data get to CodeBoard?
+        //I have a scaffold (copyBoard) - DS
+        int[,] CodeBoard = new int[numRows, numCols];
         public Board()
         {
             //"this" does not exist in the current context
+            //Just make a blank board, then it can be used for copying data
         }
         public Board(Form parentForm, Image placeholder)
         {
@@ -35,9 +42,9 @@ namespace ConnectFour_Group1
             //the connect four grid
 
             CurrentPlayerColor = PlayerOneColor;
-            for (int x = 0; x < 7; x++)
+            for (int x = 0; x < numRows; x++)
             {
-                for (int y = 0; y < 6; y++)
+                for (int y = 0; y < numCols; y++)
                 {
                     board[x, y] = new Cell("0", x, y);
 
@@ -243,9 +250,9 @@ namespace ConnectFour_Group1
         }
         private void RedrawGameBoard()
         {
-            for (int x = 0; x < 7; x++)
+            for (int x = 0; x < numRows; x++)
             {
-                for (int y = 0; y < 6; y++)
+                for (int y = 0; y < numCols; y++)
                 {
                     if (CodeBoard[x, y] == 0)
                     {
@@ -264,6 +271,7 @@ namespace ConnectFour_Group1
         }
         private void PrintCodeBoardToConsole()
         {
+            //Debug function, remains hard-coded
             Debug.WriteLine("");
             for (int y = 6; y > 0; y--)
             {
@@ -581,6 +589,21 @@ namespace ConnectFour_Group1
                 //Debug.WriteLine("no out of bounds detected");
                 return true;
             }
+        }
+        public Board copyBoard()
+        {
+            //Copy function to allow the AI to calculate passing a board
+            Board copy = new Board();
+            //copy only the state
+            for(int r = 0; r < numRows; r++)
+            {
+                for(int c = 0; c < numCols; c++)
+                {
+                    //Using this nested for Loop, we can put the data onto the copy and return it. Seeing how we can take board -> CodeBoard
+                    //TypeCast board data -> CodeBoard data? - DS
+                }
+            }
+            return copy;
         }
     }
 }
