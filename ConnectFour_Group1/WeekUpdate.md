@@ -68,19 +68,34 @@ Week 2 Progress:
     - Absolutely, the team has high spirits. The meeting was aligning and together it is a matter of conglomerating the efforts.
 - Issues the Team is Having?
     - Besides time, it is making tests for the edge cases to solidify certain logic; otherwise it is business as usual.
-- Breakdown of what Each Member plans on accomplishing:
+- Breakdown of what Each Member plans on accomplishing the following week:
     - Austin
-        - Logic / Backend work with PvP + PvE
+        - AI, and Logic per Game mode
     - David
         - ADS parsing, and ListBox presentation
     - Aminah
         - GUI and logic consultation  
 - Any Resource from the Professor?
-    - Input Data / No
+    - As it stands, the team is steady in progress, we do not need assistance nor resource at this time.
     
-~ DS
+~ DS (Finalized and Posted 4/18/26)
 
 ---
 ## Week 3 (April 20 - April 27)
+Week 3 Progress:
+- Insert Week 3 Progress Here
+    - Austin
+    - Aminah
+    - David
+- Completed to Week 3 Date:
+- Is the Team confident to complete the project in the timeframe?
+- Issues the Team is Having?
+- Breakdown of what Each Member plans on accomplishing the following week:
+    - Austin
+    - David
+    - Aminah
+- Any Resource from the Professor?
+    
+~ DS (Assembled on 04/18/26)
 
 ---
