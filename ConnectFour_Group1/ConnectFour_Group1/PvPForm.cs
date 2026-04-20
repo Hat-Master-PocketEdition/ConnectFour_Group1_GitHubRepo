@@ -45,5 +45,11 @@ namespace ConnectFour_Group1
             load.Show();
             this.Hide();
         }
+        private int turnCounter()
+        {
+            //When called, counts the turns.
+            int turnCounter = 0;
+            return turnCounter++;
+        }
     }
 }
