@@ -187,7 +187,7 @@ namespace ConnectFour_Group1
             }
             RedrawGameBoard();
             PrintCodeBoardToConsole();
-            WinStateChecking(x, startY, player);
+            Debug.WriteLine("HIGHEST CHAIN IN-A-ROW: " + WinStateChecking(x, startY, player));
         }
         private void HoverChip(Image color, int x)
         {
@@ -290,7 +290,7 @@ namespace ConnectFour_Group1
             }
 
         }
-        private bool WinStateChecking(int playedSpotX, int playedSpotY, int currentPlayer)
+        private int WinStateChecking(int playedSpotX, int playedSpotY, int currentPlayer)
         {
             //AW
             
@@ -305,6 +305,7 @@ namespace ConnectFour_Group1
             int superY = playedSpotY;
             int superX = playedSpotX;
             int chain = 1;
+            int largestChain = 1;
             bool keepGoing = true;
 
             //check for DIRECTLY BELOW
@@ -323,18 +324,20 @@ namespace ConnectFour_Group1
                         //Debug.WriteLine("VERTICAL CHAIN: " + chain + ", STOPPING");
                     }
                 }
-                if (chain >= 4)
+                if (chain > largestChain)
                 {
-                    Debug.WriteLine("chain: " + chain + ", " + "returned WIN for PLAYER " + currentPlayer);
-                    return true;
+                    
+                    Debug.WriteLine("Setting largestChain to " +  chain + ", previously " + largestChain);
+                    largestChain = chain;
+                    //Debug.WriteLine("chain: " + chain + ", " + "returned WIN for PLAYER " + currentPlayer);
                 }
-                else
-                {
-                    Debug.WriteLine("VERTICAL CHAIN:  " + chain + ", MOVING ON");
+                //else
+                //{
+                //    Debug.WriteLine("VERTICAL CHAIN:  " + chain + ", MOVING ON");
 
 
-                    //return false;
-                }
+                //    //return false;
+                //}
 
 
                 //reset all values because each check is separate from the others
@@ -391,16 +394,19 @@ namespace ConnectFour_Group1
                 }
                 //now we can check if chain wins
                 //This is EAST-WEST CHECKING
-                if (chain >= 4)
+                if (chain > largestChain)
                 {
-                    Debug.WriteLine("EAST-WEST chain: " + chain + ", " + "returned WIN for PLAYER " + currentPlayer);
-                    return true;
+
+                    Debug.WriteLine("Setting largestChain to " + chain + ", previously " + largestChain);
+                    largestChain = chain;
+                    //Debug.WriteLine("EAST-WEST chain: " + chain + ", " + "returned WIN for PLAYER " + currentPlayer);
+                    //return true;
                 }
-                else
-                {
-                    Debug.WriteLine("EAST-WEST CHAIN: " + chain + ", MOVING ON");
-                    //return false;
-                }
+                //else
+                //{
+                //    Debug.WriteLine("EAST-WEST CHAIN: " + chain + ", MOVING ON");
+                //    //return false;
+                //}
 
                 //reset all values because each check is separate from the others
                 superY = playedSpotY;
@@ -459,17 +465,19 @@ namespace ConnectFour_Group1
                 }
                 //now we can check if chain wins
                 //This is SOUTHEAST-NORTHWEST DIAGONAL
-                if (chain >= 4)
+                if (chain > largestChain)
                 {
-                                  
-                    Debug.WriteLine("NE-SW CHAIN:     " + chain + ", " + "returned WIN for PLAYER " + currentPlayer);
-                    return true;
+
+                    Debug.WriteLine("Setting largestChain to " + chain + ", previously " + largestChain);
+                    largestChain = chain;
+                    //Debug.WriteLine("NE-SW CHAIN:     " + chain + ", " + "returned WIN for PLAYER " + currentPlayer);
+                    //return true;
                 }
-                else
-                {
-                    Debug.WriteLine("NE-SW CHAIN:     " + chain + ", MOVING ON");
-                    //return false;
-                }
+                //else
+                //{
+                //    Debug.WriteLine("NE-SW CHAIN:     " + chain + ", MOVING ON");
+                //    //return false;
+                //}
 
                 //reset all values because each check is separate from the others
                 superY = playedSpotY;
@@ -528,19 +536,25 @@ namespace ConnectFour_Group1
                     }
                 }
                 //now we can check if chain wins
-                if (chain >= 4)
+                if (chain > largestChain)
                 {
-                    Debug.WriteLine("SE-NW CHAIN:     " + chain + ", " + "returned WIN for PLAYER " + currentPlayer);
-                    return true;
-                }
-                else
-                {
-                    Debug.WriteLine("SE-NW CHAIN:     " + chain + ", MOVING ON");
 
-                    //since this is the last check in the loop, return false
-                    return false;
+                    Debug.WriteLine("Setting largestChain to " + chain + ", previously " + largestChain);
+                    largestChain = chain;
+                    //Debug.WriteLine("SE-NW CHAIN:     " + chain + ", " + "returned WIN for PLAYER " + currentPlayer);
+                    //return true;
                 }
+                //else
+                //{
+                //    Debug.WriteLine("SE-NW CHAIN:     " + chain + ", MOVING ON");
+
+                //    //since this is the last check in the loop, return false
+                    
+                //}
+
             }
+
+            return largestChain;
         }
         
         public bool CheckIfArrayInBounds(int superX, int superY, string intentUD, string intentLR)
