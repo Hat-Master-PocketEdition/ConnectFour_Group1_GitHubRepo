@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.Drawing;
 using System.Linq;
 using System.Security.Cryptography.X509Certificates;
 using System.Text;
@@ -15,6 +16,7 @@ namespace ConnectFour_Group1
         //a 2D Cell array.
         //-DS Let's add private const int for better definition
         //Also added numRows / numCols to For Loops for better control
+        int numPlayers = 2;
         private const int numRows = 7;
         private const int numCols = 6;
         Cell[,] board = new Cell[numRows, numCols];
@@ -36,11 +38,11 @@ namespace ConnectFour_Group1
             //"this" does not exist in the current context
             //Just make a blank board, then it can be used for copying data
         }
-        public Board(Form parentForm, Image placeholder)
+        public Board(Form parentForm, Image placeholder, int numPlayers)
         {
             //this constructor takes a placeholder image to act as empty space in
             //the connect four grid
-
+            this.numPlayers = numPlayers;
             CurrentPlayerColor = PlayerOneColor;
             for (int x = 0; x < numRows; x++)
             {
@@ -248,6 +250,45 @@ namespace ConnectFour_Group1
 
             }
         }
+        private int HighestAvailablePointInColumn(int x)
+        {
+            //this function returns the highest point in the column 
+            //returns 99 if column is full
+
+            //this is a slight copy/paste of HoverChip
+            int startY = 5;
+            if (CodeBoard[x, 5] != 0)
+            {
+                //if CodeBoard at the highest point isn't 0, column is full
+                return 99;
+            }
+            while (true)
+            {
+                if (startY == 0)
+                {
+                    //the whileloop has traversed to the bottom of the column
+                    //return the lowest possible value, zero
+                    return 0;
+                }
+                else if (CodeBoard[x, startY - 1] != 0)
+                {
+                    //the whileloop has reached the highest available point
+                    //return the current point
+
+                    return startY;
+                }
+                else if (CodeBoard[x, startY] == 0)
+                {
+                    //there is empty space below the currently falling chip
+                    //we haven't reached to highest availble point
+                    //keep going
+
+                    startY--;
+                }
+                
+
+            }
+        }
         private void RedrawGameBoard()
         {
             for (int x = 0; x < numRows; x++)
@@ -284,19 +325,80 @@ namespace ConnectFour_Group1
             Debug.WriteLine("");
 
         }
+        private void BotTurn()
+        {
+            int currentHighestChain = 0;
+            int highestChainAtColumn = 99;
+
+            //first, check to see if the human can win next turn, take effort to block it
+            for (int i = 0; i < numCols; i++)
+            {
+                int currentColumnChain = WinStateChecking(i, HighestAvailablePointInColumn(i), 1);
+                if (currentHighestChain < currentColumnChain)
+                {
+                    currentHighestChain = currentColumnChain;
+                    highestChainAtColumn = i;
+                }
+            }
+            if (currentHighestChain == 3)
+            {
+                DropChip(2, highestChainAtColumn, 5);
+            }
+            else
+            {
+                //if currentHighestChain doesn't turn up as 3, then the player isn't about to win
+                //the bot should then continue to pursue it's own chain
+                currentHighestChain = 0;
+                highestChainAtColumn = 99;
+                for (int i = 0; i < numCols; i++)
+                {
+                    int currentColumnChain = WinStateChecking(i, HighestAvailablePointInColumn(i), 2);
+                    if (currentHighestChain < currentColumnChain)
+                    {
+                        currentHighestChain = currentColumnChain;
+                        highestChainAtColumn = i;
+                    }
+                }
+                DropChip(2, highestChainAtColumn, 5);
+            }
+
+            //after turn is played, go back to player turn
+        }
         private void NextPlayerTurn()
         {
-            if (CurrentPlayer == 1)
+            if (CurrentPlayer == 1 && numPlayers == 2)
             {
+                //in 2 player mode
+                //player 1 just played
+                //change to player 2
                 CurrentPlayer = 2;
                 CurrentPlayerColor = PlayerTwoColor;
             }
-            else if (CurrentPlayer == 2)
+            else if (CurrentPlayer == 2 && numPlayers == 2)
             {
+                //in 2 player mode
+                //player 2 just played
+                //change to player 1
                 CurrentPlayer = 1;
                 CurrentPlayerColor = PlayerOneColor;
             }
-
+            else if (CurrentPlayer == 1 && numPlayers == 1)
+            {
+                //in 1 player mode
+                //human just played
+                //BotTurn
+                CurrentPlayer = 2;
+                CurrentPlayerColor = PlayerTwoColor;
+                BotTurn();
+            }
+            else if (CurrentPlayer == 2 && numPlayers == 1)
+            {
+                //in 1 player mode
+                //bot just played
+                //change to player 1;
+                CurrentPlayer = 1;
+                CurrentPlayerColor = PlayerOneColor;
+            }
         }
         private int WinStateChecking(int playedSpotX, int playedSpotY, int currentPlayer)
         {

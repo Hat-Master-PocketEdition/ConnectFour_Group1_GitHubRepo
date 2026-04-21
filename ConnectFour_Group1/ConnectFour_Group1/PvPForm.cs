@@ -31,7 +31,7 @@ namespace ConnectFour_Group1
         public PvPForm()
         {
             InitializeComponent();
-            Board GameBoard = new Board(this, Image.FromFile(@"../../Resources/BlackChip.png"));
+            Board GameBoard = new Board(this, Image.FromFile(@"../../Resources/BlackChip.png"), 2);
 
             //InitializeBoard(GameBoard);
         }

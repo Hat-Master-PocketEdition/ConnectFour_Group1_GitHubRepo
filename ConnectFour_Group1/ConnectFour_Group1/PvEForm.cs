@@ -17,6 +17,7 @@ namespace ConnectFour_Group1
         public PvEForm()
         {
             InitializeComponent();
+            Board GameBoard = new Board(this, Image.FromFile(@"../../Resources/BlackChip.png"), 1);
         }
 
         private void AppClose(object sender, FormClosedEventArgs e)
