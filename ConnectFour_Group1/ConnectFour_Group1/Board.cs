@@ -38,6 +38,7 @@ namespace ConnectFour_Group1
         int[,] CodeBoard = new int[numRows, numCols];
         public Board()
         {
+            CurrentPlayerColor = PlayerOneColor;
             //"this" does not exist in the current context
             //keeping this blank, this is never invoked on purpose
         }
@@ -208,8 +209,8 @@ namespace ConnectFour_Group1
             if (ValidMove)
             {
                 //if WinStateChecking returns 4 in this scenarion, that means the current player one
-                Debug.WriteLine(WinStateChecking(x, y, player));
-                if (WinStateChecking(x, y, player) >= 4)
+                Debug.WriteLine(WinStateChecking(x, startY, player));
+                if (WinStateChecking(x, startY, player) >= 4)
                 {
                     PlayerWon(player);
                 }
@@ -470,7 +471,7 @@ namespace ConnectFour_Group1
             int superY = playedSpotY;
             int superX = playedSpotX;
 
-            Debug.WriteLine("attempting to resolve: " + playedSpotX + ", " + playedSpotY);
+            Debug.WriteLine("WSC PRE: attempting to resolve: " + playedSpotX + ", " + playedSpotY);
             if(playedSpotY == 99)
             {
                 //if this passes true, then the column is full, the bot shouldn't try to DropChip here
@@ -481,19 +482,28 @@ namespace ConnectFour_Group1
                 return 0;
                 
             }
+            int iteration = 0;
             int chain = 1;
             int largestChain = 1;
             bool keepGoing = true;
+            Debug.WriteLine("WSC PRE: chain: " + chain + ", largestChain: " + largestChain);
 
             //check for DIRECTLY BELOW
             {
-                keepGoing = CheckIfArrayInBounds(superX, superY, "down", "none");
+                keepGoing = CheckIfArrayInBounds(superX, superY - 1, "down", "none");
+                Debug.WriteLine("ENTERING LOOP");
 
                 while (keepGoing)
                 {
-                    if (superY > 0 && CodeBoard[playedSpotX, superY - 1] == currentPlayer)
+                    //Debug.WriteLine("WSC: pointing to " + playedSpotX + ", " + (superY - 1) + " (" + CodeBoard[playedSpotX, superY - 1] + ")");
+                    keepGoing = CheckIfArrayInBounds(superX, superY - 1, "down", "none");
+                    if (CodeBoard[playedSpotX, superY - 1] == currentPlayer)
                     {
+                        Debug.WriteLine("-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-");
                         chain++;
+                        iteration++;
+                        Debug.WriteLine("WSC Down: chain update: " + chain + ", largestChain: " + largestChain + ", iteration " + iteration);
+
                         //Debug.WriteLine("VERTICAL CHAIN: " + chain);
                         superY--;
                     }
@@ -503,22 +513,16 @@ namespace ConnectFour_Group1
                         //Debug.WriteLine("VERTICAL CHAIN: " + chain + ", STOPPING");
                     }
                 }
+                Debug.WriteLine("-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-");
+                Debug.WriteLine("EXITING LOOP");
+
                 if (chain > largestChain)
                 {
-                    
-                    Debug.WriteLine("Setting largestChain to " +  chain + ", previously " + largestChain);
+
+                    Debug.WriteLine("WSC Down: setting largestChain to " + chain + ", previously " + largestChain);
                     largestChain = chain;
                     //Debug.WriteLine("chain: " + chain + ", " + "returned WIN for PLAYER " + currentPlayer);
                 }
-                //else
-                //{
-                //    Debug.WriteLine("VERTICAL CHAIN:  " + chain + ", MOVING ON");
-
-
-                //    //return false;
-                //}
-
-
                 //reset all values because each check is separate from the others
                 superY = playedSpotY;
                 chain = 1;
@@ -555,7 +559,7 @@ namespace ConnectFour_Group1
                 //This is EAST
                 while (keepGoing)
                 {
-                    keepGoing = CheckIfArrayInBounds(superX, superY, "none", "r");
+                    keepGoing = CheckIfArrayInBounds(superX, superY, "none", "right");
                     if (keepGoing == true)
                     {
                         if (superY > 0 && CodeBoard[superX + 1, playedSpotY] == currentPlayer)
@@ -576,7 +580,7 @@ namespace ConnectFour_Group1
                 if (chain > largestChain)
                 {
 
-                    Debug.WriteLine("Setting largestChain to " + chain + ", previously " + largestChain);
+                    Debug.WriteLine("WSC: chain update: " + chain + ", largestChain: " + largestChain + ", iteration " + iteration);
                     largestChain = chain;
                     //Debug.WriteLine("EAST-WEST chain: " + chain + ", " + "returned WIN for PLAYER " + currentPlayer);
                     //return true;
@@ -625,7 +629,7 @@ namespace ConnectFour_Group1
                 //This is NORTHEAST DIAGONAL
                 while (keepGoing)
                 {
-                    keepGoing = CheckIfArrayInBounds(superX, superY, "up", "r");
+                    keepGoing = CheckIfArrayInBounds(superX, superY, "up", "right");
                     if (keepGoing == true)
                     {
                         if (superY > 0 && CodeBoard[superX + 1, superY + 1] == currentPlayer)
@@ -647,17 +651,11 @@ namespace ConnectFour_Group1
                 if (chain > largestChain)
                 {
 
-                    Debug.WriteLine("Setting largestChain to " + chain + ", previously " + largestChain);
+                    Debug.WriteLine("WSC: getting largestChain to " + chain + ", previously " + largestChain);
                     largestChain = chain;
                     //Debug.WriteLine("NE-SW CHAIN:     " + chain + ", " + "returned WIN for PLAYER " + currentPlayer);
                     //return true;
                 }
-                //else
-                //{
-                //    Debug.WriteLine("NE-SW CHAIN:     " + chain + ", MOVING ON");
-                //    //return false;
-                //}
-
                 //reset all values because each check is separate from the others
                 superY = playedSpotY;
                 superX = playedSpotX;
@@ -669,20 +667,18 @@ namespace ConnectFour_Group1
                 //This is SOUTHEAST DIAGONAL
                 while (keepGoing)
                 {
-                    keepGoing = CheckIfArrayInBounds(superX, superY, "down", "r");
+                    keepGoing = CheckIfArrayInBounds(superX, superY, "down", "right");
                     if (keepGoing)
                     {
                         if (superY > 0 && CodeBoard[superX + 1, superY - 1] == currentPlayer)
                         {
                             chain++;
-                            //Debug.WriteLine("SouthEast CHAIN: " + chain);
                             superY--;
                             superX++;
                         }
                         else
                         {
                             keepGoing = false;
-                            //Debug.WriteLine("SouthEast CHAIN: " + chain + ", STOPPING");
                         }
                     }
                 }
@@ -714,7 +710,6 @@ namespace ConnectFour_Group1
                         }
                     }
                 }
-                //now we can check if chain wins
                 if (chain > largestChain)
                 {
 
@@ -732,7 +727,7 @@ namespace ConnectFour_Group1
                 //}
 
             }
-
+            Debug.WriteLine("returning largest chain: " + largestChain);
             return largestChain;
         }
         public bool CheckIfArrayInBounds(int superX, int superY, string intentUD, string intentLR)
@@ -747,22 +742,23 @@ namespace ConnectFour_Group1
 
             if (intentUD == "up" && superY + 1 > 5)
             {
-                //Debug.WriteLine("superY + 1 = " + (superY + 1).ToString() + ", out of bounds");
+                Debug.WriteLine("AIB: superY + 1 = " + (superY + 1).ToString() + ", out of bounds, can't go up");
+
                 return false;
             }
             if (intentUD == "down" && superY - 1 < 0)
             {
-                //Debug.WriteLine("superY - 1 = " + (superY - 1).ToString() + ", out of bounds");
+                Debug.WriteLine("AIB: superY - 1 = " + (superY - 1).ToString() + ", out of bounds, can't go down");
                 return false;
             }
-            if (intentLR == "r" && superX + 1 > 6)
+            if (intentLR == "right" && superX + 1 > 6)
             {
+                Debug.WriteLine("AIB: superX + 1 = " + (superX - 1).ToString() + ", out of bounds, can't go right");
                 return false;
             }
             if (intentLR == "left" && superX - 1 < 0)
             {
-                //Debug.WriteLine("superX - 1 = " + (superX - 1).ToString() + ", out of bounds");
-
+                Debug.WriteLine("AIB: superX - 1 = " + (superX - 1).ToString() + ", out of bounds, can't go left");
                 return false;
             }
 
