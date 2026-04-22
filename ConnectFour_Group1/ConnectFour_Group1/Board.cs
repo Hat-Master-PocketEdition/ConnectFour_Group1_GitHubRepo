@@ -20,6 +20,9 @@ namespace ConnectFour_Group1
         private const int numRows = 7;
         private const int numCols = 6;
         Cell[,] board = new Cell[numRows, numCols];
+        bool control = false;
+
+        Label theLabel = new Label();
 
         int CurrentPlayer = 1;
 
@@ -36,7 +39,7 @@ namespace ConnectFour_Group1
         public Board()
         {
             //"this" does not exist in the current context
-            //Just make a blank board, then it can be used for copying data
+            //keeping this blank, this is never invoked on purpose
         }
         public Board(Form parentForm, Image placeholder, int numPlayers)
         {
@@ -59,30 +62,33 @@ namespace ConnectFour_Group1
                     //this y value is negative because a 2d array's values 
                     //start in the top-left instead of the bottom left. inversing
                     //the y-axis here changes the graph it to be more legible 
-                    board[x, y].Location = new Point(200 + (x * 48), 300 + (-y * 44));
+                    board[x, y].Location = new Point(200 + (x * 50), 300 + (-y * 44));
 
                     board[x, y].Image = placeholder;
-                    board[x, y].Size = new Size(40, 40);
+                    board[x, y].Size = new Size(50, 40);
                     board[x, y].Cursor = Cursors.Hand;
                     board[x, y].BorderStyle = BorderStyle.None;
                     board[x, y].Name = x + ", " + y;
 
                     board[x, y].SetX(x);
                     board[x, y].SetY(y);
-                    
-                    //Debug.WriteLine(board[x, y].GetX() + ", " + board[x, y].GetY());
-                    //Debug.WriteLine(board[x, y].Name);
-
 
                     board[x, y].MouseEnter += MouseEnter;
                     board[x, y].MouseLeave += MouseLeave;
                     board[x, y].Click += PictureBox_Clicked;
 
                     parentForm.Controls.Add(board[x, y]);
-
                     //CodeBoard[x, y] = 0;
                 }
             }
+            theLabel.Location = new Point(300, 10);
+            theLabel.AutoSize = true;
+            //yeah i made it comic sans on purpose, what about it?
+            theLabel.Font = new Font("Comic Sans MS", 15, FontStyle.Regular);
+            if (numPlayers == 1) { theLabel.Text = "Player vs. Bot"; }
+            else { theLabel.Text = "Player vs. Player\nRed's Turn"; }
+            parentForm.Controls.Add(theLabel);
+            control = true;
         }
         public Cell At(int x, int y)
         {
@@ -92,29 +98,39 @@ namespace ConnectFour_Group1
         }
         private void PictureBox_Clicked(object sender, EventArgs e)
         {
-            Cell curCell = sender as Cell;
+            //only do something if the program isnt doing anything like
+            //dropping a chips, checking win states
+            //or if the game isn't over
+            if(control)
+            {
+                Cell curCell = sender as Cell;
 
-            //reverse-engineering the location data to get the 2d array
-            //coordinates of the PictureBox array the cursor clicked.
+                //reverse-engineering the location data to get the 2d array
+                //coordinates of the PictureBox array the cursor clicked.
 
-            int x = curCell.GetX();
-            int y = curCell.GetY();
+                int x = curCell.GetX();
+                int y = curCell.GetY();
 
-            //int x = (Pic.Location.X - 200) / 48;
-            //int y = -(Pic.Location.Y - 300) / 44;
+                //int x = (Pic.Location.X - 200) / 48;
+                //int y = -(Pic.Location.Y - 300) / 44;
 
-            //we can use that X and Y data to translate it to CodeBoard
-            //GameBoard[] and CodeBoard[] are set up the exact same way, so we
-            //basically we swap out RedChip.png and YellowChip.png for 1 and 2
-            DropChip(CurrentPlayer, x, y);
-            MouseEnter(sender, e);
+                //we can use that X and Y data to translate it to CodeBoard
+                //GameBoard[] and CodeBoard[] are set up the exact same way, so we
+                //basically we swap out RedChip.png and YellowChip.png for 1 and 2
+                DropChip(CurrentPlayer, x, y);
+                MouseEnter(sender, e);
+            }
+
         }
         private void MouseEnter(object sender, EventArgs e)
         {
-            PictureBox Pic = sender as PictureBox;
-            int x = (Pic.Location.X - 200) / 48;
-            int y = -(Pic.Location.Y - 300) / 44;
-            HoverChip(CurrentPlayerColor, x);
+            if (control)
+            {
+                PictureBox Pic = sender as PictureBox;
+                int x = (Pic.Location.X - 200) / 48;
+                int y = -(Pic.Location.Y - 300) / 44;
+                HoverChip(CurrentPlayerColor, x);
+            }
         }
         private void MouseLeave(object sender, EventArgs e)
         {
@@ -122,9 +138,8 @@ namespace ConnectFour_Group1
         }
         private void DropChip(int player, int x, int y)
         {
-
+            control = false;
             Debug.WriteLine("Dropping Player " + player + "'s Chip at: " + x + ", " + y);
-
 
             //This function handles the dropping of a player's chip
             //it traverses a column of CodeBoard until it finds an
@@ -189,17 +204,28 @@ namespace ConnectFour_Group1
                 }
 
             }
+            RedrawGameBoard();
             if (ValidMove)
             {
-                //Debug.WriteLine("VALID MOVE");
-                NextPlayerTurn();
+                //if WinStateChecking returns 4 in this scenarion, that means the current player one
+                Debug.WriteLine(WinStateChecking(x, y, player));
+                if (WinStateChecking(x, y, player) >= 4)
+                {
+                    PlayerWon(player);
+                }
+                else
+                {
+                    //if not, proceed to next player turn;
+                    NextPlayerTurn();
+                    control = true;
+                }
+
             }
-            RedrawGameBoard();
             PrintCodeBoardToConsole();
-            //Debug.WriteLine("HIGHEST CHAIN IN-A-ROW: " + WinStateChecking(x, startY, player));
         }
         private void HoverChip(Image color, int x)
         {
+
             //HoverChip is a carbon copy of Drop Chip with some slight differences
             //and both vary from each other a lot with changes that came after
             //instead of handling placing chips, this manages the "hologram" that 
@@ -399,6 +425,7 @@ namespace ConnectFour_Group1
                 //change to player 2
                 CurrentPlayer = 2;
                 CurrentPlayerColor = PlayerTwoColor;
+                theLabel.Text = "Player vs. Player\nYellow's Turn";
             }
             else if (CurrentPlayer == 2 && numPlayers == 2)
             {
@@ -407,6 +434,8 @@ namespace ConnectFour_Group1
                 //change to player 1
                 CurrentPlayer = 1;
                 CurrentPlayerColor = PlayerOneColor;
+                theLabel.Text = "Player vs. Player\nRed's Turn";
+
             }
             else if (CurrentPlayer == 1 && numPlayers == 1)
             {
@@ -759,5 +788,20 @@ namespace ConnectFour_Group1
             }
             return copy;
         }
+        public void PlayerWon(int player)
+        {
+            control = false;
+            if (player == 1)
+            {
+                theLabel.Text = "Red Wins!";
+                theLabel.ForeColor = Color.FromArgb(186, 0, 0);
+            }
+            else if (player == 2)
+            {
+                theLabel.Text = "Yellow Wins!";
+                theLabel.ForeColor = Color.FromArgb(199, 199, 0);
+            }
+        }
     }
+    
 }

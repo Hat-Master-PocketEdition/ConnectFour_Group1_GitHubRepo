@@ -45,6 +45,7 @@
             // 
             AutoScaleDimensions = new SizeF(7F, 15F);
             AutoScaleMode = AutoScaleMode.Font;
+            BackColor = Color.FromArgb(0, 0, 178);
             ClientSize = new Size(800, 450);
             Controls.Add(Btn_BackToStart);
             Name = "PvEForm";

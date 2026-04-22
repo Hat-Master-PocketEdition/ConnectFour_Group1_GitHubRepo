@@ -37,7 +37,7 @@
             // label1
             // 
             label1.AutoSize = true;
-            label1.Location = new Point(57, 26);
+            label1.Location = new Point(389, 163);
             label1.Name = "label1";
             label1.Size = new Size(38, 15);
             label1.TabIndex = 0;
@@ -77,6 +77,7 @@
             // 
             AutoScaleDimensions = new SizeF(7F, 15F);
             AutoScaleMode = AutoScaleMode.Font;
+            BackColor = Color.FromArgb(0, 0, 178);
             ClientSize = new Size(800, 450);
             Controls.Add(btn_GoToStats);
             Controls.Add(btn_GoToPvP);
