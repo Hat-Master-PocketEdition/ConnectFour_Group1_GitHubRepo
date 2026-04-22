@@ -70,8 +70,8 @@ namespace ConnectFour_Group1
                     board[x, y].SetX(x);
                     board[x, y].SetY(y);
                     
-                    Debug.WriteLine(board[x, y].GetX() + ", " + board[x, y].GetY());
-                    Debug.WriteLine(board[x, y].Name);
+                    //Debug.WriteLine(board[x, y].GetX() + ", " + board[x, y].GetY());
+                    //Debug.WriteLine(board[x, y].Name);
 
 
                     board[x, y].MouseEnter += MouseEnter;
@@ -123,7 +123,7 @@ namespace ConnectFour_Group1
         private void DropChip(int player, int x, int y)
         {
 
-            Debug.WriteLine(x + ", " + y);
+            Debug.WriteLine("Dropping Player " + player + "'s Chip at: " + x + ", " + y);
 
 
             //This function handles the dropping of a player's chip
@@ -196,7 +196,7 @@ namespace ConnectFour_Group1
             }
             RedrawGameBoard();
             PrintCodeBoardToConsole();
-            Debug.WriteLine("HIGHEST CHAIN IN-A-ROW: " + WinStateChecking(x, startY, player));
+            //Debug.WriteLine("HIGHEST CHAIN IN-A-ROW: " + WinStateChecking(x, startY, player));
         }
         private void HoverChip(Image color, int x)
         {
@@ -253,7 +253,7 @@ namespace ConnectFour_Group1
         private int HighestAvailablePointInColumn(int x)
         {
             //this function returns the highest point in the column 
-            //returns 99 if column is full
+            //returns nintey nine if column is full
 
             //this is a slight copy/paste of HoverChip
             int startY = 5;
@@ -327,42 +327,68 @@ namespace ConnectFour_Group1
         }
         private void BotTurn()
         {
+            Debug.WriteLine("start of bot turn");
+
             int currentHighestChain = 0;
-            int highestChainAtColumn = 99;
+            //if the bot doesn't know what to do
+            //just place chip in random column
+            int highestChainAtColumn = 0;
 
             //first, check to see if the human can win next turn, take effort to block it
             for (int i = 0; i < numCols; i++)
             {
+
                 int currentColumnChain = WinStateChecking(i, HighestAvailablePointInColumn(i), 1);
-                if (currentHighestChain < currentColumnChain)
+                if (currentHighestChain < currentColumnChain && currentColumnChain != 99)
                 {
+                    //if currentColumnChain is nintey nine, that means the column is full. 
+                    //the bot should not try to drop a chip in this column
                     currentHighestChain = currentColumnChain;
                     highestChainAtColumn = i;
                 }
             }
-            if (currentHighestChain == 3)
+            if (currentHighestChain == 4)
             {
+                //if the current highest chain while tracking the player is 4
+                //take effort to block the player's move
                 DropChip(2, highestChainAtColumn, 5);
             }
             else
             {
-                //if currentHighestChain doesn't turn up as 3, then the player isn't about to win
+
+                //if currentHighestChain doesn't turn up as 4, then the player isn't about to win
                 //the bot should then continue to pursue it's own chain
                 currentHighestChain = 0;
-                highestChainAtColumn = 99;
+                highestChainAtColumn = 0;
                 for (int i = 0; i < numCols; i++)
                 {
                     int currentColumnChain = WinStateChecking(i, HighestAvailablePointInColumn(i), 2);
-                    if (currentHighestChain < currentColumnChain)
+                    Debug.WriteLine("currentColumnChain at i = " + i + ": " + currentColumnChain);
+                    if (currentHighestChain < currentColumnChain && currentColumnChain != 99)
                     {
                         currentHighestChain = currentColumnChain;
                         highestChainAtColumn = i;
                     }
                 }
-                DropChip(2, highestChainAtColumn, 5);
-            }
+                Debug.WriteLine("currentHighestChain: " + currentHighestChain);
+                if (currentHighestChain == 2)
+                {
+                    //if the highest chain returned is 2, then the board is either fresh
+                    //or there are no "good" spots to play
+                    //in this case, we can just have the bot drop the chip anywhere :)
 
-            //after turn is played, go back to player turn
+
+                    Random rng = new Random();
+                    int randomColumn = rng.Next(1, numCols);
+                    Debug.WriteLine("doing random spot at: " + randomColumn);
+                    DropChip(2, randomColumn, 5);
+                }
+                else
+                {
+                    DropChip(2, highestChainAtColumn, 5);
+                }
+            }
+            Debug.WriteLine("end of bot turn");
         }
         private void NextPlayerTurn()
         {
@@ -414,12 +440,26 @@ namespace ConnectFour_Group1
             //the chip we just dropped
             int superY = playedSpotY;
             int superX = playedSpotX;
+
+            Debug.WriteLine("attempting to resolve: " + playedSpotX + ", " + playedSpotY);
+            if(playedSpotY == 99)
+            {
+                //if this passes true, then the column is full, the bot shouldn't try to DropChip here
+                //under any circumstances
+
+                //return zero here, since BotTurn() will read this and pass over the column
+                Debug.WriteLine("returning 0");
+                return 0;
+                
+            }
             int chain = 1;
             int largestChain = 1;
             bool keepGoing = true;
 
             //check for DIRECTLY BELOW
             {
+                keepGoing = CheckIfArrayInBounds(superX, superY, "down", "none");
+
                 while (keepGoing)
                 {
                     if (superY > 0 && CodeBoard[playedSpotX, superY - 1] == currentPlayer)
@@ -486,7 +526,7 @@ namespace ConnectFour_Group1
                 //This is EAST
                 while (keepGoing)
                 {
-                    keepGoing = CheckIfArrayInBounds(superX, superY, "none", "right");
+                    keepGoing = CheckIfArrayInBounds(superX, superY, "none", "r");
                     if (keepGoing == true)
                     {
                         if (superY > 0 && CodeBoard[superX + 1, playedSpotY] == currentPlayer)
@@ -556,7 +596,7 @@ namespace ConnectFour_Group1
                 //This is NORTHEAST DIAGONAL
                 while (keepGoing)
                 {
-                    keepGoing = CheckIfArrayInBounds(superX, superY, "up", "right");
+                    keepGoing = CheckIfArrayInBounds(superX, superY, "up", "r");
                     if (keepGoing == true)
                     {
                         if (superY > 0 && CodeBoard[superX + 1, superY + 1] == currentPlayer)
@@ -600,7 +640,7 @@ namespace ConnectFour_Group1
                 //This is SOUTHEAST DIAGONAL
                 while (keepGoing)
                 {
-                    keepGoing = CheckIfArrayInBounds(superX, superY, "down", "right");
+                    keepGoing = CheckIfArrayInBounds(superX, superY, "down", "r");
                     if (keepGoing)
                     {
                         if (superY > 0 && CodeBoard[superX + 1, superY - 1] == currentPlayer)
@@ -666,7 +706,6 @@ namespace ConnectFour_Group1
 
             return largestChain;
         }
-        
         public bool CheckIfArrayInBounds(int superX, int superY, string intentUD, string intentLR)
         {
             //these if-statements ensure the hypothetical pointer never goes out-of-bounds
@@ -677,34 +716,33 @@ namespace ConnectFour_Group1
             //this was done because certain movements skirt right across the edge of the board, and they would
             //constantly be caught 
 
-            if (intentUD == "up" && superY + 1 > 6)
+            if (intentUD == "up" && superY + 1 > 5)
             {
                 //Debug.WriteLine("superY + 1 = " + (superY + 1).ToString() + ", out of bounds");
                 return false;
             }
-            else if (intentUD == "down" && superY - 1 < 0)
+            if (intentUD == "down" && superY - 1 < 0)
             {
                 //Debug.WriteLine("superY - 1 = " + (superY - 1).ToString() + ", out of bounds");
                 return false;
             }
-            else if (intentLR == "right" && superX + 1 > 5)
+            if (intentLR == "r" && superX + 1 > 6)
             {
-                //Debug.WriteLine("superX + 1 = " + (superX + 1).ToString() + ", out of bounds");
-
                 return false;
             }
-            else if (intentLR == "left" && superX - 1 < 0)
+            if (intentLR == "left" && superX - 1 < 0)
             {
                 //Debug.WriteLine("superX - 1 = " + (superX - 1).ToString() + ", out of bounds");
 
                 return false;
             }
-            else
-            {
-                //if all those passed, then the array is still in bounds, return true;
-                //Debug.WriteLine("no out of bounds detected");
-                return true;
-            }
+
+            //if all those passed, then the array is still in bounds, return true;
+            //Debug.WriteLine("no out of bounds detected");
+
+
+            return true;
+            
         }
         public Board copyBoard()
         {
