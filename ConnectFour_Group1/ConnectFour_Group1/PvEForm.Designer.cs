@@ -28,7 +28,9 @@
         /// </summary>
         private void InitializeComponent()
         {
+            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(PvEForm));
             Btn_BackToStart = new Button();
+            restartButton = new Button();
             SuspendLayout();
             // 
             // Btn_BackToStart
@@ -41,13 +43,25 @@
             Btn_BackToStart.UseVisualStyleBackColor = true;
             Btn_BackToStart.Click += Btn_BackToStart_Click;
             // 
+            // restartButton
+            // 
+            restartButton.Location = new Point(713, 415);
+            restartButton.Name = "restartButton";
+            restartButton.Size = new Size(75, 23);
+            restartButton.TabIndex = 2;
+            restartButton.Text = "Restart";
+            restartButton.UseVisualStyleBackColor = true;
+            restartButton.Click += restartButton_Click;
+            // 
             // PvEForm
             // 
             AutoScaleDimensions = new SizeF(7F, 15F);
             AutoScaleMode = AutoScaleMode.Font;
             BackColor = Color.FromArgb(0, 0, 178);
             ClientSize = new Size(800, 450);
+            Controls.Add(restartButton);
             Controls.Add(Btn_BackToStart);
+            Icon = (Icon)resources.GetObject("$this.Icon");
             Name = "PvEForm";
             StartPosition = FormStartPosition.CenterScreen;
             Text = "Connect Four - Player vs. Computer";
@@ -58,5 +72,6 @@
         #endregion
 
         private Button Btn_BackToStart;
+        private Button restartButton;
     }
 }

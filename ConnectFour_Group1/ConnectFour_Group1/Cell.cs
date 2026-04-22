@@ -10,7 +10,7 @@ namespace ConnectFour_Group1
     //This allows us to store more data
 
     //AW
-    internal class Cell : PictureBox
+    public class Cell : PictureBox
     {
         private string value;
 

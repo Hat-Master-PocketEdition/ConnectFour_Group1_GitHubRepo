@@ -17,7 +17,7 @@ namespace ConnectFour_Group1
         public PvEForm()
         {
             InitializeComponent();
-            Board GameBoard = new Board(this, Image.FromFile(@"../../Resources/BlackChip.png"), 1);
+            Board GameBoard = new Board(this, Image.FromFile(@"../../Resources/BlackChip.png"), 1, restartButton);
         }
 
         private void AppClose(object sender, FormClosedEventArgs e)
@@ -38,6 +38,13 @@ namespace ConnectFour_Group1
             //When called, counts the turns.
             int turnCounter = 0;
             return turnCounter++;
+        }
+
+        private void restartButton_Click(object sender, EventArgs e)
+        {
+            PvEForm load = new PvEForm();
+            load.Show();
+            this.Hide();
         }
         //Call Game.assembleEntry(Game game) to pass to Stat sheet
     }

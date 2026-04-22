@@ -10,7 +10,7 @@ using System.Windows.Forms.Design;
 
 namespace ConnectFour_Group1
 {
-    internal class Board
+    public class Board
     {
         //The Board class is merely a vessel that contains
         //a 2D Cell array.
@@ -21,7 +21,8 @@ namespace ConnectFour_Group1
         private const int numCols = 6;
         Cell[,] board = new Cell[numRows, numCols];
         bool control = false;
-
+        Button rButton;
+        Form parentForm;
         Label theLabel = new Label();
 
         int CurrentPlayer = 1;
@@ -42,10 +43,13 @@ namespace ConnectFour_Group1
             //"this" does not exist in the current context
             //keeping this blank, this is never invoked on purpose
         }
-        public Board(Form parentForm, Image placeholder, int numPlayers)
+        public Board(Form pForm, Image placeholder, int numPlayers, Button restartButton)
         {
             //this constructor takes a placeholder image to act as empty space in
             //the connect four grid
+            rButton = restartButton;
+            rButton.Hide();
+            parentForm = pForm;
             this.numPlayers = numPlayers;
             CurrentPlayerColor = PlayerOneColor;
             for (int x = 0; x < numRows; x++)
@@ -78,7 +82,7 @@ namespace ConnectFour_Group1
                     board[x, y].MouseLeave += MouseLeave;
                     board[x, y].Click += PictureBox_Clicked;
 
-                    parentForm.Controls.Add(board[x, y]);
+                    pForm.Controls.Add(board[x, y]);
                     //CodeBoard[x, y] = 0;
                 }
             }
@@ -88,7 +92,7 @@ namespace ConnectFour_Group1
             theLabel.Font = new Font("Comic Sans MS", 15, FontStyle.Regular);
             if (numPlayers == 1) { theLabel.Text = "Player vs. Bot"; }
             else { theLabel.Text = "Player vs. Player\nRed's Turn"; }
-            parentForm.Controls.Add(theLabel);
+            pForm.Controls.Add(theLabel);
             control = true;
         }
         public Cell At(int x, int y)
@@ -212,7 +216,7 @@ namespace ConnectFour_Group1
                 Debug.WriteLine(WinStateChecking(x, startY, player));
                 if (WinStateChecking(x, startY, player) >= 4)
                 {
-                    PlayerWon(player);
+                    PlayerWon(player, board[x, startY], numPlayers);
                 }
                 else
                 {
@@ -427,6 +431,8 @@ namespace ConnectFour_Group1
                 CurrentPlayer = 2;
                 CurrentPlayerColor = PlayerTwoColor;
                 theLabel.Text = "Player vs. Player\nYellow's Turn";
+                //parentForm.Icon = new Icon(@"../../Resources/RedIcon.ico");
+
             }
             else if (CurrentPlayer == 2 && numPlayers == 2)
             {
@@ -436,6 +442,7 @@ namespace ConnectFour_Group1
                 CurrentPlayer = 1;
                 CurrentPlayerColor = PlayerOneColor;
                 theLabel.Text = "Player vs. Player\nRed's Turn";
+                //parentForm.Icon = new Icon(@"../../Resources/RedIcon.ico");
 
             }
             else if (CurrentPlayer == 1 && numPlayers == 1)
@@ -445,6 +452,8 @@ namespace ConnectFour_Group1
                 //BotTurn
                 CurrentPlayer = 2;
                 CurrentPlayerColor = PlayerTwoColor;
+                //parentForm.Icon = new Icon(@"../../Resources/YellowIcon.ico");
+
                 BotTurn();
             }
             else if (CurrentPlayer == 2 && numPlayers == 1)
@@ -454,6 +463,7 @@ namespace ConnectFour_Group1
                 //change to player 1;
                 CurrentPlayer = 1;
                 CurrentPlayerColor = PlayerOneColor;
+                //parentForm.Icon = new Icon(@"../../Resources/YellowIcon.ico");
             }
         }
         private int WinStateChecking(int playedSpotX, int playedSpotY, int currentPlayer)
@@ -730,7 +740,7 @@ namespace ConnectFour_Group1
             Debug.WriteLine("returning largest chain: " + largestChain);
             return largestChain;
         }
-        public bool CheckIfArrayInBounds(int superX, int superY, string intentUD, string intentLR)
+        private bool CheckIfArrayInBounds(int superX, int superY, string intentUD, string intentLR)
         {
             //these if-statements ensure the hypothetical pointer never goes out-of-bounds
             //from the array
@@ -784,20 +794,23 @@ namespace ConnectFour_Group1
             }
             return copy;
         }
-        public void PlayerWon(int player)
+        private void PlayerWon(int player, Cell finalMove, int numPlayers)
         {
             control = false;
-            if (player == 1)
+            ReviewForm load = new ReviewForm(player, finalMove.GetX(), finalMove.GetY(), numPlayers);
+            //i cant believe i need a nested for loop just to add the board
+            //i could probably figure out a different solution but idc we're so close and my brain hurts
+            for (int x = 0; x < numRows; x++)
             {
-                theLabel.Text = "Red Wins!";
-                theLabel.ForeColor = Color.FromArgb(186, 0, 0);
+                for (int y = 0; y < numCols; y++)
+                {
+                    load.Controls.Add(board[x, y]);
+                }
             }
-            else if (player == 2)
-            {
-                theLabel.Text = "Yellow Wins!";
-                theLabel.ForeColor = Color.FromArgb(199, 199, 0);
-            }
+            load.Show();
+            parentForm.Hide();
         }
     }
+
     
 }

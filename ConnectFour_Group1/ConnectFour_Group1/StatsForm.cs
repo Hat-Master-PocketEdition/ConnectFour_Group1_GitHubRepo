@@ -41,7 +41,8 @@ namespace ConnectFour_Group1
         private void readTextFile()
         {
             //This creates a StreamReader and grabs the GameHist.txt
-            StreamReader file = new StreamReader("../../Resources/GameHist.txt");
+            string filePath = "../../Resources/GameHist.txt";
+            StreamReader file = new StreamReader(filePath);
             //End Start, Mental Note: De-Parse ADS to variables for easy display on List Box
             //REMEMBER LISTBOX SINGLE LINE APPEND
             String line = file.ReadLine();

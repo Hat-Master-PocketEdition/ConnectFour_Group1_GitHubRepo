@@ -31,7 +31,7 @@ namespace ConnectFour_Group1
         public PvPForm()
         {
             InitializeComponent();
-            Board GameBoard = new Board(this, Image.FromFile(@"../../Resources/BlackChip.png"), 2);
+            Board GameBoard = new Board(this, Image.FromFile(@"../../Resources/BlackChip.png"), 2, restartButton);
 
             //InitializeBoard(GameBoard);
         }
@@ -50,6 +50,13 @@ namespace ConnectFour_Group1
             //When called, counts the turns.
             int turnCounter = 0;
             return turnCounter++;
+        }
+
+        private void restartButton_Click(object sender, EventArgs e)
+        {
+            PvEForm load = new PvEForm();
+            load.Show();
+            this.Hide();
         }
     }
 }
