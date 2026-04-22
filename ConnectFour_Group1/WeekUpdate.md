@@ -85,6 +85,8 @@ Week 2 Progress:
 Week 3 Progress:
 - Insert Week 3 Progress Here
     - Austin
+        - PvE Mode Completed
+        - PvP Mode Completed
     - Aminah
     - David
 - Completed to Week 3 Date:
