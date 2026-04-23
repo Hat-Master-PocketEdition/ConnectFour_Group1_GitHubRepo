@@ -500,6 +500,7 @@ namespace ConnectFour_Group1
 
             //check for DIRECTLY BELOW
             {
+                pointOne = board[playedSpotX, playedSpotY];
                 pointTwo = board[playedSpotX, playedSpotY];
                 keepGoing = CheckIfArrayInBounds(superX, superY - 1, "down", "none");
                 Debug.WriteLine("ENTERING DOWN LOOP");
