@@ -27,7 +27,7 @@ namespace ConnectFour_Group1
         //but i thought it might be cool to come back and allow players to pick
         //their own colors later on. Plus it doesn't hurt to have them here if
         //we never get/got to it.
-        Image PlayerOneColor = Image.FromFile(@"../../Resources/RedChip.png");
+        Image PlayerOneColor = Image.FromFile(@"../../ConnectFour_Group1/Resources/RedChip.png");
         Image PlayerTwoColor = Image.FromFile(@"../../Resources/YellowChip.png");
         Image CurrentPlayerColor;
         //Reading through, how does data get to CodeBoard?
