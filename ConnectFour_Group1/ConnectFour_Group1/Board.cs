@@ -1,12 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Diagnostics;
-using System.Drawing;
-using System.Linq;
-using System.Security.Cryptography.X509Certificates;
-using System.Text;
-using System.Threading.Tasks;
-using System.Windows.Forms.Design;
+﻿using System.Diagnostics;
 
 namespace ConnectFour_Group1
 {
@@ -25,6 +17,10 @@ namespace ConnectFour_Group1
         Form parentForm;
         Label theLabel = new Label();
 
+        Cell lockPointOne = new Cell();
+        Cell lockPointTwo = new Cell();
+        Cell pointOne = new Cell();
+        Cell pointTwo = new Cell();
         int CurrentPlayer = 1;
 
         //these could be hard coded to just red and yellow without using variables 
@@ -63,7 +59,7 @@ namespace ConnectFour_Group1
                     //the center of the screen. if we ever decide to change the
                     //size of the form at some point in the future, I will need
                     //to manually change those values.
-                    
+
                     //this y value is negative because a 2d array's values 
                     //start in the top-left instead of the bottom left. inversing
                     //the y-axis here changes the graph it to be more legible 
@@ -106,7 +102,7 @@ namespace ConnectFour_Group1
             //only do something if the program isnt doing anything like
             //dropping a chips, checking win states
             //or if the game isn't over
-            if(control)
+            if (control)
             {
                 Cell curCell = sender as Cell;
 
@@ -139,7 +135,11 @@ namespace ConnectFour_Group1
         }
         private void MouseLeave(object sender, EventArgs e)
         {
-            RedrawGameBoard();
+            if (control)
+            {
+                RedrawGameBoard();
+
+            }
         }
         private void DropChip(int player, int x, int y)
         {
@@ -216,7 +216,7 @@ namespace ConnectFour_Group1
                 Debug.WriteLine(WinStateChecking(x, startY, player));
                 if (WinStateChecking(x, startY, player) >= 4)
                 {
-                    PlayerWon(player, board[x, startY], numPlayers);
+                    PlayerWon(player, numPlayers);
                 }
                 else
                 {
@@ -316,7 +316,7 @@ namespace ConnectFour_Group1
 
                     startY--;
                 }
-                
+
 
             }
         }
@@ -469,7 +469,7 @@ namespace ConnectFour_Group1
         private int WinStateChecking(int playedSpotX, int playedSpotY, int currentPlayer)
         {
             //AW
-            
+
             //The following function is divided into four segments via brackets
             //each segment searches for how many chips are in-a-row in their
             //given direction.
@@ -482,7 +482,7 @@ namespace ConnectFour_Group1
             int superX = playedSpotX;
 
             Debug.WriteLine("WSC PRE: attempting to resolve: " + playedSpotX + ", " + playedSpotY);
-            if(playedSpotY == 99)
+            if (playedSpotY == 99)
             {
                 //if this passes true, then the column is full, the bot shouldn't try to DropChip here
                 //under any circumstances
@@ -490,7 +490,7 @@ namespace ConnectFour_Group1
                 //return zero here, since BotTurn() will read this and pass over the column
                 Debug.WriteLine("returning 0");
                 return 0;
-                
+
             }
             int iteration = 0;
             int chain = 1;
@@ -500,21 +500,23 @@ namespace ConnectFour_Group1
 
             //check for DIRECTLY BELOW
             {
+                pointTwo = board[playedSpotX, playedSpotY];
                 keepGoing = CheckIfArrayInBounds(superX, superY - 1, "down", "none");
-                Debug.WriteLine("ENTERING LOOP");
+                Debug.WriteLine("ENTERING DOWN LOOP");
 
                 while (keepGoing)
                 {
+                    Debug.WriteLine("iteration " + iteration);
+
                     //Debug.WriteLine("WSC: pointing to " + playedSpotX + ", " + (superY - 1) + " (" + CodeBoard[playedSpotX, superY - 1] + ")");
                     keepGoing = CheckIfArrayInBounds(superX, superY - 1, "down", "none");
                     if (CodeBoard[playedSpotX, superY - 1] == currentPlayer)
                     {
-                        Debug.WriteLine("-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-");
                         chain++;
+                        pointOne = board[playedSpotX, superY - 1];
                         iteration++;
                         Debug.WriteLine("WSC Down: chain update: " + chain + ", largestChain: " + largestChain + ", iteration " + iteration);
 
-                        //Debug.WriteLine("VERTICAL CHAIN: " + chain);
                         superY--;
                     }
                     else
@@ -523,34 +525,45 @@ namespace ConnectFour_Group1
                         //Debug.WriteLine("VERTICAL CHAIN: " + chain + ", STOPPING");
                     }
                 }
-                Debug.WriteLine("-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-");
                 Debug.WriteLine("EXITING LOOP");
 
                 if (chain > largestChain)
                 {
-
                     Debug.WriteLine("WSC Down: setting largestChain to " + chain + ", previously " + largestChain);
                     largestChain = chain;
                     //Debug.WriteLine("chain: " + chain + ", " + "returned WIN for PLAYER " + currentPlayer);
+                }
+                if (chain >= 4)
+                {
+                    Debug.WriteLine("storing lockpoints at down");
+
+                    lockPointOne = pointOne;
+                    lockPointTwo = pointTwo;
                 }
                 //reset all values because each check is separate from the others
                 superY = playedSpotY;
                 chain = 1;
                 keepGoing = true;
+                iteration = 0;
             }
             //check for EAST and WEST
             {
                 //This is WEST
+                Debug.WriteLine("ENTERING WEST LOOP");
                 while (keepGoing)
                 {
+                    Debug.WriteLine("iteration " + iteration);
+
                     keepGoing = CheckIfArrayInBounds(superX, superY, "none", "left");
                     if (keepGoing)
                     {
-                        if (superX > 0 && CodeBoard[superX - 1, playedSpotY] == currentPlayer)
+                        if (CodeBoard[superX - 1, playedSpotY] == currentPlayer)
                         {
                             chain++;
-                            //Debug.WriteLine("WEST CHAIN: " + chain);
+                            pointOne = board[superX - 1, playedSpotY];
                             superX--;
+
+                            iteration++;
                         }
                         else
                         {
@@ -559,6 +572,8 @@ namespace ConnectFour_Group1
                         }
                     }
                 }
+                Debug.WriteLine("EXITING LOOP");
+
                 //the previous only checks for West
                 //reset all the values except for chain
                 //because the previous chain still carries over
@@ -567,24 +582,31 @@ namespace ConnectFour_Group1
                 superX = playedSpotX;
                 //same loop, just inverting the axis 
                 //This is EAST
+                Debug.WriteLine("ENTERING EAST LOOP");
                 while (keepGoing)
                 {
+                    Debug.WriteLine("iteration " + iteration);
+
                     keepGoing = CheckIfArrayInBounds(superX, superY, "none", "right");
                     if (keepGoing == true)
                     {
-                        if (superY > 0 && CodeBoard[superX + 1, playedSpotY] == currentPlayer)
+                        if (CodeBoard[superX + 1, playedSpotY] == currentPlayer)
                         {
                             chain++;
-                            //Debug.WriteLine("EAST CHAIN: " + chain);
+                            pointTwo = board[superX + 1, playedSpotY];
                             superX++;
+
+                            iteration++;
                         }
                         else
                         {
                             keepGoing = false;
-                            //Debug.WriteLine("EAST CHAIN: " + chain + ", STOPPING");
                         }
                     }
+
                 }
+                Debug.WriteLine("EXITING LOOP");
+
                 //now we can check if chain wins
                 //This is EAST-WEST CHECKING
                 if (chain > largestChain)
@@ -595,11 +617,12 @@ namespace ConnectFour_Group1
                     //Debug.WriteLine("EAST-WEST chain: " + chain + ", " + "returned WIN for PLAYER " + currentPlayer);
                     //return true;
                 }
-                //else
-                //{
-                //    Debug.WriteLine("EAST-WEST CHAIN: " + chain + ", MOVING ON");
-                //    //return false;
-                //}
+                if (chain >= 4)
+                {
+                    Debug.WriteLine("storing lockpoints at east-west");
+                    lockPointOne = pointOne;
+                    lockPointTwo = pointTwo;
+                }
 
                 //reset all values because each check is separate from the others
                 superY = playedSpotY;
@@ -618,6 +641,7 @@ namespace ConnectFour_Group1
                         if (superY > 0 && CodeBoard[superX - 1, superY - 1] == currentPlayer)
                         {
                             chain++;
+                            pointOne = board[superX - 1, superY - 1];
                             //Debug.WriteLine("SouthWest CHAIN: " + chain);
                             superY--;
                             superX--;
@@ -645,6 +669,7 @@ namespace ConnectFour_Group1
                         if (superY > 0 && CodeBoard[superX + 1, superY + 1] == currentPlayer)
                         {
                             chain++;
+                            pointTwo = board[superX + 1, superY + 1];
                             //Debug.WriteLine("NorthEast CHAIN: " + chain);
                             superY++;
                             superX++;
@@ -657,14 +682,18 @@ namespace ConnectFour_Group1
                     }
                 }
                 //now we can check if chain wins
-                //This is SOUTHEAST-NORTHWEST DIAGONAL
                 if (chain > largestChain)
                 {
 
                     Debug.WriteLine("WSC: getting largestChain to " + chain + ", previously " + largestChain);
                     largestChain = chain;
-                    //Debug.WriteLine("NE-SW CHAIN:     " + chain + ", " + "returned WIN for PLAYER " + currentPlayer);
-                    //return true;
+                }
+                if (chain >= 4)
+                {
+                    Debug.WriteLine("storing lockpoints at southwest-northeast");
+
+                    lockPointOne = pointOne;
+                    lockPointTwo = pointTwo;
                 }
                 //reset all values because each check is separate from the others
                 superY = playedSpotY;
@@ -683,6 +712,7 @@ namespace ConnectFour_Group1
                         if (superY > 0 && CodeBoard[superX + 1, superY - 1] == currentPlayer)
                         {
                             chain++;
+                            pointOne = board[superX + 1, superY - 1];
                             superY--;
                             superX++;
                         }
@@ -709,6 +739,8 @@ namespace ConnectFour_Group1
                         if (superY > 0 && CodeBoard[superX - 1, superY + 1] == currentPlayer)
                         {
                             chain++;
+                            pointTwo = board[superX - 1, superY + 1];
+
                             //Debug.WriteLine("NorthWest CHAIN: " + chain);
                             superY++;
                             superX--;
@@ -728,16 +760,14 @@ namespace ConnectFour_Group1
                     //Debug.WriteLine("SE-NW CHAIN:     " + chain + ", " + "returned WIN for PLAYER " + currentPlayer);
                     //return true;
                 }
-                //else
-                //{
-                //    Debug.WriteLine("SE-NW CHAIN:     " + chain + ", MOVING ON");
-
-                //    //since this is the last check in the loop, return false
-                    
-                //}
-
+                if (chain >= 4)
+                {
+                    Debug.WriteLine("storing lockpoints at southeast-northwest");
+                    lockPointOne = pointOne;
+                    lockPointTwo = pointTwo;
+                }
             }
-            Debug.WriteLine("returning largest chain: " + largestChain);
+            Debug.WriteLine("returning largest chain: " + largestChain + ", from [" + lockPointOne.GetX() + ", " + lockPointOne.GetY() + "] to [" + lockPointTwo.GetX() + ", " + lockPointTwo.GetY() + "]");
             return largestChain;
         }
         private bool CheckIfArrayInBounds(int superX, int superY, string intentUD, string intentLR)
@@ -777,16 +807,16 @@ namespace ConnectFour_Group1
 
 
             return true;
-            
+
         }
         public Board copyBoard()
         {
             //Copy function to allow the AI to calculate passing a board
             Board copy = new Board();
             //copy only the state
-            for(int r = 0; r < numRows; r++)
+            for (int r = 0; r < numRows; r++)
             {
-                for(int c = 0; c < numCols; c++)
+                for (int c = 0; c < numCols; c++)
                 {
                     //Using this nested for Loop, we can put the data onto the copy and return it. Seeing how we can take board -> CodeBoard
                     //TypeCast board data -> CodeBoard data? - DS
@@ -794,17 +824,17 @@ namespace ConnectFour_Group1
             }
             return copy;
         }
-        private void PlayerWon(int player, Cell finalMove, int numPlayers)
+        private void PlayerWon(int player, int numPlayers)
         {
             control = false;
-            ReviewForm load = new ReviewForm(player, finalMove.GetX(), finalMove.GetY(), numPlayers);
+            ReviewForm load = new ReviewForm(player, numPlayers, board, lockPointOne, lockPointTwo);
             //i cant believe i need a nested for loop just to add the board
             //i could probably figure out a different solution but idc we're so close and my brain hurts
             for (int x = 0; x < numRows; x++)
             {
                 for (int y = 0; y < numCols; y++)
                 {
-                    load.Controls.Add(board[x, y]);
+                    //load.Controls.Add(board[x, y]);
                 }
             }
             load.Show();
@@ -812,5 +842,5 @@ namespace ConnectFour_Group1
         }
     }
 
-    
+
 }

@@ -1,25 +1,28 @@
-﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
-using System.Drawing;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.Diagnostics;
 using System.Windows.Forms;
 
 namespace ConnectFour_Group1
 {
     public partial class ReviewForm : Form
     {
+        Cell point1 = new Cell();
+        Cell point2 = new Cell();
+        int winner;
+        Cell[,] board = new Cell[7, 6];
+        bool control = false;
         public ReviewForm()
         {
             InitializeComponent();
         }
-        public ReviewForm(int playerWon, int winningMoveX, int winningMoveY, int formType)
+        public ReviewForm(int playerWon, int formType, Cell[,] berd, Cell point1, Cell point2)
         {
-
             InitializeComponent();
+            Debug.WriteLine("OPENING REVIEWFORM");
+            winner = playerWon;
+            this.point1 = point1;
+            this.point2 = point2;
+            //Debug.WriteLine("[ " + point1.Location.X + ", " + point1.Location.Y + "]");
+            //Debug.WriteLine("[ " + point2.Location.X + ", " + point2.Location.Y + "]");
             theLabel.Font = new Font("Comic Sans MS", 15, FontStyle.Regular);
             if (playerWon == 1)
             {
@@ -34,7 +37,18 @@ namespace ConnectFour_Group1
                 this.Icon = new System.Drawing.Icon(@"../../Resources/YellowIcon.ico");
             }
             this.Controls.Add(theLabel);
+            for (int x = 0; x < 7; x++)
+            {
+                for (int y = 0; y < 6; y++)
+                { 
 
+                    //this.Controls.Add(berd[x, y]);
+                    board[x, y] = berd[x, y];
+                    this.Controls.Add(board[x, y]);
+                }
+            }
+            
+            DrawLine(point1, point2);
         }
 
         private void BackToMenu_Click(object sender, EventArgs e)
@@ -43,10 +57,107 @@ namespace ConnectFour_Group1
             load.Show();
             this.Hide();
         }
-
         private void AppExit(object sender, FormClosedEventArgs e)
         {
             Application.Exit();
+        }
+        private void DrawLine(Cell point1, Cell point2)
+        {
+            //oh jeez how do i explain this
+
+            //ok so i take the coordinates of point1 and use them to
+            //inch towards the coordinates of point2 by using greaterthan,
+            //lessthan, and equalto comparators
+
+            //every time the "pointer" makes a move towards point 2
+            //set the image at that position to the highlighter color
+            //which is just a neon variant of the same chip color
+
+            Image yellowHighlight = Image.FromFile(@"../../Resources/YellowHighlight.png");
+            Image redHighlight = Image.FromFile(@"../../Resources/RedHighlight.png");
+
+            Image highlighter = redHighlight;
+            //im just setting this as redHighlight upon initialize to be easy
+            if(winner == 1)
+            {
+                highlighter = redHighlight;
+            }
+            else
+            {
+                highlighter = yellowHighlight;
+            }
+            int pointerX = point1.GetX();
+            int pointerY = point1.GetY();
+
+            Debug.WriteLine("highlighting [ " + pointerX + ", " + pointerY + " ]");
+            board[pointerX, pointerY].Image = highlighter;
+
+            Debug.WriteLine("pointer: " + pointerX + ", " + pointerY);
+            Debug.WriteLine("point2 : " + point2.GetX() + ", " + point2.GetY());
+            Debug.WriteLine("moving to point 2: " + point2.GetX() + ", " + point2.GetY());
+
+
+            while (point2.GetX() != pointerX || point2.GetY() != pointerY)
+            {
+
+                //using a single if-statement with a bunch of else-if's
+                //to prevent the loop from moving more than once per iteration
+                //it should automatically stop after highlighting point2
+                if (pointerX == point2.GetX() && pointerY < point2.GetY())
+                {
+                    //going down
+                    pointerY++;
+                    board[pointerX, pointerY].Image = highlighter;
+                }
+                else if (pointerX < point2.GetX() && pointerY > point2.GetY())
+                {
+                    //going down-right
+                    pointerX--;
+                    pointerY++;
+                    board[pointerX, pointerY].Image = highlighter;
+                }
+                else if (pointerX < point2.GetX() && pointerY == point2.GetY())
+                {
+                    //going right
+                    pointerX++;
+                    board[pointerX, pointerY].Image = highlighter;
+                }
+                else if (pointerX < point2.GetX() && pointerY < point2.GetY())
+                {
+                    //going up-right
+                    pointerX++;
+                    pointerY++;
+                    board[pointerX, pointerY].Image = highlighter;
+                }
+                else if (pointerX == point2.GetX() && pointerY < point2.GetY())
+                {
+                    //going up
+                    pointerY++;
+                    board[pointerX, pointerY].Image = highlighter;
+                }
+                else if (pointerX > point2.GetX() && pointerY < point2.GetY())
+                {
+                    //going up-left
+                    pointerX--;
+                    pointerY++;
+                    board[pointerX, pointerY].Image = highlighter;
+                }
+                else if (pointerX > point2.GetX() && pointerY == point2.GetY())
+                {
+                    //going left
+                    pointerX--;
+                    board[pointerX, pointerY].Image = highlighter;
+                }
+                else if (pointerX > point2.GetX() && pointerY > point2.GetY())
+                {
+                    //going down-left
+                    pointerX--;
+                    pointerY--;
+                    board[pointerX, pointerY].Image = highlighter;
+                }
+                Debug.WriteLine("highlighted [ " + pointerX + ", " + pointerY + " ]");
+
+            }
         }
     }
 }
