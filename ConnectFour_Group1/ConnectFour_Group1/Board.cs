@@ -21,6 +21,8 @@ namespace ConnectFour_Group1
         Cell lockPointTwo = new Cell();
         Cell pointOne = new Cell();
         Cell pointTwo = new Cell();
+        //-DS Let's hardcode Player1 at 1; Anyone Else Player2 at int 2(CPU or other player);
+        //Using CurrentPlayer as reference to Color of P1 color string on if/else (In StatsForm);
         int CurrentPlayer = 1;
 
         //these could be hard coded to just red and yellow without using variables 
@@ -841,7 +843,18 @@ namespace ConnectFour_Group1
             load.Show();
             parentForm.Hide();
         }
+        public string getPlayerColor()
+        {
+            if(PlayerOneColor == CurrentPlayerColor && CurrentPlayer == 1)
+            {
+                return "Red";
+            }
+            else
+            {
+                return "Yellow";
+            }
+        }
     }
-
+        
 
 }
