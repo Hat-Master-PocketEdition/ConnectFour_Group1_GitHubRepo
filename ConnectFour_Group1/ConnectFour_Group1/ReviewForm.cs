@@ -10,7 +10,7 @@ namespace ConnectFour_Group1
         int winner;
         Cell[,] board = new Cell[7, 6];
         bool control = false;
-        bool isPVP; 
+        bool isPVP;
         public ReviewForm()
         {
             InitializeComponent();
@@ -169,12 +169,18 @@ namespace ConnectFour_Group1
             {
                 new PvPForm().Show();
             }
-            else {
+            else
+            {
 
-                new PvEForm().Show(); 
+                new PvEForm().Show();
 
             }
 
+        }
+
+        private void btnExit_Click(object sender, EventArgs e)
+        {
+            Application.Exit();
         }
     }
 }

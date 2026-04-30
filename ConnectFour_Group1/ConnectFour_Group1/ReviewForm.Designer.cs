@@ -31,6 +31,7 @@
             BackToMenu = new Button();
             theLabel = new Label();
             btnRestart = new Button();
+            btnExit = new Button();
             SuspendLayout();
             // 
             // BackToMenu
@@ -65,12 +66,24 @@
             btnRestart.UseVisualStyleBackColor = true;
             btnRestart.Click += btnRestart_Click;
             // 
+            // btnExit
+            // 
+            btnExit.Font = new Font("Segoe UI", 9F, FontStyle.Bold);
+            btnExit.Location = new Point(405, 553);
+            btnExit.Name = "btnExit";
+            btnExit.Size = new Size(86, 31);
+            btnExit.TabIndex = 3;
+            btnExit.Text = "Exit";
+            btnExit.UseVisualStyleBackColor = true;
+            btnExit.Click += btnExit_Click;
+            // 
             // ReviewForm
             // 
             AutoScaleDimensions = new SizeF(8F, 20F);
             AutoScaleMode = AutoScaleMode.Font;
             BackColor = Color.FromArgb(0, 0, 178);
             ClientSize = new Size(914, 600);
+            Controls.Add(btnExit);
             Controls.Add(btnRestart);
             Controls.Add(theLabel);
             Controls.Add(BackToMenu);
@@ -88,5 +101,6 @@
         private Button BackToMenu;
         private Label theLabel;
         private Button btnRestart;
+        private Button btnExit;
     }
 }
