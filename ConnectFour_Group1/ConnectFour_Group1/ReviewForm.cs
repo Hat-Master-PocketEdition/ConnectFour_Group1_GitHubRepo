@@ -10,6 +10,7 @@ namespace ConnectFour_Group1
         int winner;
         Cell[,] board = new Cell[7, 6];
         bool control = false;
+        bool isPVP; 
         public ReviewForm()
         {
             InitializeComponent();
@@ -21,6 +22,7 @@ namespace ConnectFour_Group1
             winner = playerWon;
             this.point1 = point1;
             this.point2 = point2;
+            this.isPVP = (formType == 2);
             //Debug.WriteLine("[ " + point1.Location.X + ", " + point1.Location.Y + "]");
             //Debug.WriteLine("[ " + point2.Location.X + ", " + point2.Location.Y + "]");
             theLabel.Font = new Font("Comic Sans MS", 15, FontStyle.Regular);
@@ -40,14 +42,14 @@ namespace ConnectFour_Group1
             for (int x = 0; x < 7; x++)
             {
                 for (int y = 0; y < 6; y++)
-                { 
+                {
 
                     //this.Controls.Add(berd[x, y]);
                     board[x, y] = berd[x, y];
                     this.Controls.Add(board[x, y]);
                 }
             }
-            
+
             DrawLine(point1, point2);
         }
 
@@ -78,7 +80,7 @@ namespace ConnectFour_Group1
 
             Image highlighter = redHighlight;
             //im just setting this as redHighlight upon initialize to be easy
-            if(winner == 1)
+            if (winner == 1)
             {
                 highlighter = redHighlight;
             }
@@ -158,6 +160,21 @@ namespace ConnectFour_Group1
                 Debug.WriteLine("highlighted [ " + pointerX + ", " + pointerY + " ]");
 
             }
+        }
+
+        private void btnRestart_Click(object sender, EventArgs e)
+        {
+            //restart the game depending on which mode they were playing in
+            if (isPVP)
+            {
+                new PvPForm().Show();
+            }
+            else {
+
+                new PvEForm().Show(); 
+
+            }
+
         }
     }
 }

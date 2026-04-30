@@ -30,13 +30,16 @@
         {
             BackToMenu = new Button();
             theLabel = new Label();
+            btnRestart = new Button();
             SuspendLayout();
             // 
             // BackToMenu
             // 
-            BackToMenu.Location = new Point(12, 415);
+            BackToMenu.Font = new Font("Segoe UI", 9F, FontStyle.Bold);
+            BackToMenu.Location = new Point(14, 553);
+            BackToMenu.Margin = new Padding(3, 4, 3, 4);
             BackToMenu.Name = "BackToMenu";
-            BackToMenu.Size = new Size(75, 23);
+            BackToMenu.Size = new Size(86, 31);
             BackToMenu.TabIndex = 0;
             BackToMenu.Text = "Menu";
             BackToMenu.UseVisualStyleBackColor = true;
@@ -45,20 +48,33 @@
             // theLabel
             // 
             theLabel.AutoSize = true;
-            theLabel.Location = new Point(329, 9);
+            theLabel.Location = new Point(376, 12);
             theLabel.Name = "theLabel";
-            theLabel.Size = new Size(38, 15);
+            theLabel.Size = new Size(50, 20);
             theLabel.TabIndex = 1;
             theLabel.Text = "label1";
             // 
+            // btnRestart
+            // 
+            btnRestart.Font = new Font("Segoe UI", 9F, FontStyle.Bold);
+            btnRestart.Location = new Point(816, 553);
+            btnRestart.Name = "btnRestart";
+            btnRestart.Size = new Size(86, 31);
+            btnRestart.TabIndex = 2;
+            btnRestart.Text = "Restart";
+            btnRestart.UseVisualStyleBackColor = true;
+            btnRestart.Click += btnRestart_Click;
+            // 
             // ReviewForm
             // 
-            AutoScaleDimensions = new SizeF(7F, 15F);
+            AutoScaleDimensions = new SizeF(8F, 20F);
             AutoScaleMode = AutoScaleMode.Font;
             BackColor = Color.FromArgb(0, 0, 178);
-            ClientSize = new Size(800, 450);
+            ClientSize = new Size(914, 600);
+            Controls.Add(btnRestart);
             Controls.Add(theLabel);
             Controls.Add(BackToMenu);
+            Margin = new Padding(3, 4, 3, 4);
             Name = "ReviewForm";
             StartPosition = FormStartPosition.CenterScreen;
             Text = "ReviewForm";
@@ -71,5 +87,6 @@
 
         private Button BackToMenu;
         private Label theLabel;
+        private Button btnRestart;
     }
 }
