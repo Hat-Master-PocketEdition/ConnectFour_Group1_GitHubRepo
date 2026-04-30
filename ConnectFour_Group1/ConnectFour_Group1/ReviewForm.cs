@@ -180,7 +180,17 @@ namespace ConnectFour_Group1
 
         private void btnExit_Click(object sender, EventArgs e)
         {
+            //closes the game after either red or yellow wins
             Application.Exit();
+        }
+
+        private void btnStats_Click(object sender, EventArgs e)
+        {
+            //show stats after games over 
+            StatsForm stats = new StatsForm();
+            stats.ShowDialog();
+            //stats.Show();
+            //this.Close();
         }
     }
 }

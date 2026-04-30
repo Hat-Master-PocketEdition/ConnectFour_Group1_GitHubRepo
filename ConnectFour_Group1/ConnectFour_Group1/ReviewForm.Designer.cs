@@ -32,12 +32,13 @@
             theLabel = new Label();
             btnRestart = new Button();
             btnExit = new Button();
+            btnStats = new Button();
             SuspendLayout();
             // 
             // BackToMenu
             // 
             BackToMenu.Font = new Font("Segoe UI", 9F, FontStyle.Bold);
-            BackToMenu.Location = new Point(14, 553);
+            BackToMenu.Location = new Point(364, 542);
             BackToMenu.Margin = new Padding(3, 4, 3, 4);
             BackToMenu.Name = "BackToMenu";
             BackToMenu.Size = new Size(86, 31);
@@ -58,7 +59,7 @@
             // btnRestart
             // 
             btnRestart.Font = new Font("Segoe UI", 9F, FontStyle.Bold);
-            btnRestart.Location = new Point(816, 553);
+            btnRestart.Location = new Point(261, 542);
             btnRestart.Name = "btnRestart";
             btnRestart.Size = new Size(86, 31);
             btnRestart.TabIndex = 2;
@@ -69,7 +70,7 @@
             // btnExit
             // 
             btnExit.Font = new Font("Segoe UI", 9F, FontStyle.Bold);
-            btnExit.Location = new Point(405, 553);
+            btnExit.Location = new Point(575, 542);
             btnExit.Name = "btnExit";
             btnExit.Size = new Size(86, 31);
             btnExit.TabIndex = 3;
@@ -77,12 +78,24 @@
             btnExit.UseVisualStyleBackColor = true;
             btnExit.Click += btnExit_Click;
             // 
+            // btnStats
+            // 
+            btnStats.Font = new Font("Segoe UI", 9F, FontStyle.Bold);
+            btnStats.Location = new Point(469, 542);
+            btnStats.Name = "btnStats";
+            btnStats.Size = new Size(86, 31);
+            btnStats.TabIndex = 4;
+            btnStats.Text = "Stats";
+            btnStats.UseVisualStyleBackColor = true;
+            btnStats.Click += btnStats_Click;
+            // 
             // ReviewForm
             // 
             AutoScaleDimensions = new SizeF(8F, 20F);
             AutoScaleMode = AutoScaleMode.Font;
             BackColor = Color.FromArgb(0, 0, 178);
             ClientSize = new Size(914, 600);
+            Controls.Add(btnStats);
             Controls.Add(btnExit);
             Controls.Add(btnRestart);
             Controls.Add(theLabel);
@@ -102,5 +115,6 @@
         private Label theLabel;
         private Button btnRestart;
         private Button btnExit;
+        private Button btnStats;
     }
 }
