@@ -136,7 +136,7 @@
             // cpu_WP_LBL
             // 
             cpu_WP_LBL.AutoSize = true;
-            cpu_WP_LBL.Location = new Point(607, 255);
+            cpu_WP_LBL.Location = new Point(614, 255);
             cpu_WP_LBL.Name = "cpu_WP_LBL";
             cpu_WP_LBL.Size = new Size(78, 15);
             cpu_WP_LBL.TabIndex = 12;
@@ -145,7 +145,7 @@
             // cpu_avg_LBL
             // 
             cpu_avg_LBL.AutoSize = true;
-            cpu_avg_LBL.Location = new Point(595, 228);
+            cpu_avg_LBL.Location = new Point(609, 228);
             cpu_avg_LBL.Name = "cpu_avg_LBL";
             cpu_avg_LBL.Size = new Size(83, 15);
             cpu_avg_LBL.TabIndex = 11;

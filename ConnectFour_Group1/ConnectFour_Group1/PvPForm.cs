@@ -45,13 +45,6 @@ namespace ConnectFour_Group1
             load.Show();
             this.Hide();
         }
-        private int turnCounter()
-        {
-            //When called, counts the turns.
-            int turnCounter = 0;
-            return turnCounter++;
-        }
-
         private void restartButton_Click(object sender, EventArgs e)
         {
             PvEForm load = new PvEForm();

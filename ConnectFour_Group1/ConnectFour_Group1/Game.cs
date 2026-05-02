@@ -16,7 +16,7 @@ namespace ConnectFour_Group1
         //ID,W,G,M,C
         //ID Schema: 0 - Debug Game, does not save. Index Start at 1 - N;
         private int id;
-        //W; 0 - P1; 1 - P2; 2 - AI; 3 - Tie;
+        //W; 0 - P1; 1 - AI; 2 - Tie; 
         private int win;
         //G; P - PvP; C - PvAI;
         private char gameType;
@@ -31,7 +31,11 @@ namespace ConnectFour_Group1
         //Constructor and Overloaded Constructor
         public Game()
         {
-
+            int id;
+            int win;
+            char gameType;
+            int movecount;
+            string colorSchema;
         }
         //Overloaded Constructor
         public Game(int i,int w, char g, int mC, string c)
@@ -93,6 +97,8 @@ namespace ConnectFour_Group1
             //This assembles the string to place in the GameHist .txt within the resource file
             string entry = "";
             char delim = ',';
+            entry += o.getID().ToString();
+            entry += delim.ToString();
             entry += o.getWin().ToString();
             entry += delim.ToString();
             entry += o.getGameType().ToString();
@@ -195,7 +201,7 @@ namespace ConnectFour_Group1
             int cpuWinCount = 0;
             for (int i = 0; i < g.Count; i++)
             {
-                if (g[i].getWin() == 2)
+                if (g[i].getWin() == 1)
                 {
                     cpuWinCount++;
                 }
@@ -208,7 +214,7 @@ namespace ConnectFour_Group1
             int tieCount = 0;
             for(int i = 0; i < g.Count; i++)
             {
-                if (g[i].getWin() == 3)
+                if (g[i].getWin() == 2)
                 {
                     tieCount++;
                 }
@@ -239,7 +245,22 @@ namespace ConnectFour_Group1
             double cpuWinPercentage = (double)cpuWinCount / totalGames * 100;
             return cpuWinPercentage;
         }
+        public int getIDcheck()
+        {
+            //Goes through gameHistory and returns highest ID + 1;
+            int ID = 0;
+            for (int i = 0; i < gameHistory.Count; i++)
+            {
+                if(gameHistory[i].getID() > ID)
+                {
+                    ID = gameHistory[i].getID();
+                }
+            }
+            //End of Loop; Add 1 to ID to identify new position
+            ID++;
+            return ID;
 
+        }
     //==========E N D  U T I L I T Y  F U N C T I O N S=========
     //End -DS
     }

@@ -18,13 +18,23 @@ namespace ConnectFour_Group1
         {
             InitializeComponent();
             Board GameBoard = new Board(this, Image.FromFile(@"../../Resources/BlackChip.png"), 1, restartButton);
+            Game PvE = new Game();
+            //Runs ID Check to set new Game ID, if no games, ID -> 1;
+            PvE.setID(PvE.getIDcheck());
+            PvE.setGameType('C');
+            //If player is first, then we run setColorSchema to set 0 for C1; -> 1 for C2;
+            PvE.setColorSchema("0");
+            //PvE.setColorSchema("1");
+            //Pipe in the remainder game pieces, these just need uncommented
+            //PvE.setMoveCount();
+            //PvE.setWin();
+            //string endGame = PvE.assembleEntry(PvE);
+            //PvE.writeToFile(endGame);
         }
-
         private void AppClose(object sender, FormClosedEventArgs e)
         {
             Application.Exit();
         }
-
         private void Btn_BackToStart_Click(object sender, EventArgs e)
         {
             StartForm load = new StartForm();
@@ -33,13 +43,11 @@ namespace ConnectFour_Group1
         }
         //MinMax Algo
         //Pass A Board Reference to AI (Make a Copy function to copy Board state for MinMax) - DS
-        private int turnCounter()
+        private int turnCounter(int turnCount)
         {
             //When called, counts the turns.
-            int turnCounter = 0;
-            return turnCounter++;
+            return turnCount++;
         }
-
         private void restartButton_Click(object sender, EventArgs e)
         {
             PvEForm load = new PvEForm();
