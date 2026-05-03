@@ -1,5 +1,5 @@
 ﻿using System.Diagnostics;
-
+using System.IO;
 namespace ConnectFour_Group1
 {
     public class Board
@@ -11,6 +11,10 @@ namespace ConnectFour_Group1
         int numPlayers = 2;
         private const int numRows = 7;
         private const int numCols = 6;
+        //Added this int, to count moveCount; string gameState for how the game is; Bool for checking game;
+        private int moveCount = 0;
+        private string gameState = "Running";
+        private bool isGameRun = true;
         Cell[,] board = new Cell[numRows, numCols];
         bool control = false;
         Button rButton;
@@ -214,11 +218,41 @@ namespace ConnectFour_Group1
             RedrawGameBoard();
             if (ValidMove)
             {
+                //If ValidMove true, then moveCount increases -DS
+                moveIncrease();
                 //if WinStateChecking returns 4 in this scenarion, that means the current player one
                 Debug.WriteLine(WinStateChecking(x, startY, player));
                 if (WinStateChecking(x, startY, player) >= 4)
                 {
                     PlayerWon(player, numPlayers);
+                }
+                //Adding new else-if for board-full, and return tie -DS 
+                else if(isBoardFull())
+                {
+                    setGameRun(false);
+                    setGameState("Tie");
+
+                    if(parentForm is PvEForm pve)
+                    {
+                        pve.saveGameResult();
+                    }
+                    //Tie Opens Review Form to allow view and decision
+                    //Took these two Cell Variables for whole board reference
+                    pointOne = board[0, 0];
+                    pointTwo = board[6, 5];
+                    if(numPlayers == 2)
+                    {
+                        //Send a Tie form to ReviewForm, via PvP bool (2)
+                        ReviewForm playerTie = new ReviewForm(3, 2, board, pointOne, pointTwo);
+                        playerTie.Show();
+                    }
+                    else
+                    {
+                        //This assumes numPlayers is not 2, thus PvE
+                        ReviewForm cpuTie = new ReviewForm(3, 1, board, pointOne, pointTwo);
+                        cpuTie.Show();
+                    }
+                    parentForm.Hide();
                 }
                 else
                 {
@@ -830,6 +864,20 @@ namespace ConnectFour_Group1
         private void PlayerWon(int player, int numPlayers)
         {
             control = false;
+            setGameRun(false);
+            //If-chain to check player, and numPlayers for AI win;
+            if (player == 1)
+            {
+                setGameState("PlayerWin");
+            }
+            else if(player == 2 &&  numPlayers == 1)
+            {
+                setGameState("AIWin");
+            }
+            if(parentForm is PvEForm pve)
+            {
+                pve.saveGameResult();
+            }
             ReviewForm load = new ReviewForm(player, numPlayers, board, lockPointOne, lockPointTwo);
             //i cant believe i need a nested for loop just to add the board
             //i could probably figure out a different solution but idc we're so close and my brain hurts
@@ -845,7 +893,7 @@ namespace ConnectFour_Group1
         }
         public string getPlayerColor()
         {
-            if(PlayerOneColor == CurrentPlayerColor && CurrentPlayer == 1)
+            if (PlayerOneColor == CurrentPlayerColor && CurrentPlayer == 1)
             {
                 return "Red";
             }
@@ -854,7 +902,51 @@ namespace ConnectFour_Group1
                 return "Yellow";
             }
         }
+        //Here is Utility, then Mutator Functions -DS
+        public void setMoveCount(int mC)
+        {
+            moveCount = mC;
+        }
+        public void setGameState(string gS)
+        {
+            gameState = gS;
+        }
+        public void setGameRun(bool gR)
+        {
+            isGameRun = gR;
+        }
+        public int getMoveCount()
+        {
+            return moveCount;
+        }
+        public string getGameState()
+        {
+            return gameState;
+        }
+        public bool getGameRun()
+        {
+            return isGameRun;
+        }
+        //Mutator Functions
+        public void moveIncrease()
+        {
+            //Solely increases moveCount -DS
+            moveCount++;
+        }
+        private bool isBoardFull()
+        {
+            //Helper Function to check if the board is full  -DS
+            for(int x = 0; x < numRows;x++)
+            {
+                for(int y = 0; y < numCols;y++)
+                {
+                    if (CodeBoard[x,y] == 0)
+                    {
+                        return false;
+                    }
+                }
+            }
+            return true;
+        }
     }
-        
-
 }

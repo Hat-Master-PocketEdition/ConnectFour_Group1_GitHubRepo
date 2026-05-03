@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Collections.Specialized;
 using System.ComponentModel;
 using System.Data;
+using System.Diagnostics;
 using System.Drawing;
 using System.Linq;
 using System.Text;
@@ -62,32 +63,34 @@ namespace ConnectFour_Group1
             Game newGame;
             if (File.Exists(filePath))
             {
-                Console.WriteLine("File Found");
+                Debug.WriteLine("File Found");
                 while (line != null)
                 {
-                    //Locate DelimPOS
-                    delimPOS = line.IndexOf(delim);
-                    //Read up to, but not the comma
-                    id = Int32.Parse(line.Substring(0, delimPOS));
-                    //Change line to Post comma
-                    line = line.Substring(delimPOS + 1);
-                    //Repeat for ADS
-                    delimPOS = line.IndexOf(delim);
-                    w = Int32.Parse(line.Substring(0, delimPOS));
-                    line = line.Substring(delimPOS + 1);
-                    delimPOS = line.IndexOf(delim);
-                    gT = Convert.ToChar(line.Substring(0, delimPOS));
-                    line = line.Substring(delimPOS + 1);
-                    delimPOS = line.IndexOf(delim);
-                    mC = Int32.Parse(line.Substring(0, delimPOS));
-                    line = line.Substring(delimPOS + 1);
-                    delimPOS = line.IndexOf(delim);
-                    cS = line.Substring(0, delimPOS);
-                    line = line.Substring(delimPOS + 1);
-                    //Compiles all our data to the list
-                    newGame = new Game(id, w, gT, mC, cS);
-                    //Add to List, and continue until readline is clear
-                    listofGames.Add(newGame);
+                    if (line.Trim() != "")
+                    {
+                        //Locate DelimPOS
+                        delimPOS = line.IndexOf(delim);
+                        //Read up to, but not the comma
+                        id = Int32.Parse(line.Substring(0, delimPOS));
+                        //Change line to Post comma
+                        line = line.Substring(delimPOS + 1);
+                        //Repeat for ADS
+                        delimPOS = line.IndexOf(delim);
+                        w = Int32.Parse(line.Substring(0, delimPOS));
+                        line = line.Substring(delimPOS + 1);
+                        delimPOS = line.IndexOf(delim);
+                        gT = Convert.ToChar(line.Substring(0, delimPOS));
+                        line = line.Substring(delimPOS + 1);
+                        delimPOS = line.IndexOf(delim);
+                        mC = Int32.Parse(line.Substring(0, delimPOS));
+                        line = line.Substring(delimPOS + 1);
+                        delimPOS = line.IndexOf(delim);
+                        cS = line;
+                        //Compiles all our data to the list
+                        newGame = new Game(id, w, gT, mC, cS);
+                        //Add to List, and continue until readline is clear
+                        listofGames.Add(newGame);
+                    }
                     line = file.ReadLine();
                 }
                 file.Close();
@@ -206,6 +209,10 @@ namespace ConnectFour_Group1
                 {
                     double winPercent = (double)cpuW / (cpuW + cpuT + cpuL) * 100;
                     cpu_WP_LBL.Text = winPercent.ToString("F2") + "%";
+                }
+                else
+                {
+                    cpu_WP_LBL.Text = "0%";
                 }
             }
         }

@@ -19,7 +19,11 @@ namespace ConnectFour_Group1
         {
             InitializeComponent();
             Debug.WriteLine("OPENING REVIEWFORM");
-            winner = playerWon;
+            if(playerWon < 3 && playerWon > 0)
+            {
+                //Keeps this to only actual winners
+                winner = playerWon;
+            }
             this.point1 = point1;
             this.point2 = point2;
             this.isPVP = (formType == 2);
@@ -38,7 +42,13 @@ namespace ConnectFour_Group1
                 theLabel.ForeColor = Color.FromArgb(199, 199, 0);
                 this.Icon = new System.Drawing.Icon(@"../../Resources/YellowIcon.ico");
             }
-            this.Controls.Add(theLabel);
+            //Draw check; since we can have the point passed from Board (in a draw) be 0,0 - 6,5; 
+            else if (playerWon == 3)
+            {
+                theLabel.Text = "Tie! No One Wins!";
+                theLabel.ForeColor = Color.FromArgb(181, 112, 24);
+            }
+                this.Controls.Add(theLabel);
             for (int x = 0; x < 7; x++)
             {
                 for (int y = 0; y < 6; y++)
@@ -49,8 +59,11 @@ namespace ConnectFour_Group1
                     this.Controls.Add(board[x, y]);
                 }
             }
-
-            DrawLine(point1, point2);
+            if(playerWon != 3)
+            {
+                //This ensures lines are drawn ONLY for winners, no full board illuminations
+                DrawLine(point1, point2);
+            }
         }
 
         private void BackToMenu_Click(object sender, EventArgs e)

@@ -3,6 +3,8 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.IO;
+using System.Diagnostics;
 
 namespace ConnectFour_Group1
 {
@@ -31,7 +33,7 @@ namespace ConnectFour_Group1
         //Constructor and Overloaded Constructor
         public Game()
         {
-            int id;
+            int id = getIDcheck();
             int win;
             char gameType;
             int movecount;
@@ -132,54 +134,44 @@ namespace ConnectFour_Group1
         public string filePath()
         {
             //Designate this as PATH for other Forms
-            string p = "../../Resources/GameHist.txt";
-            return p;
+            return Path.Combine(AppDomain.CurrentDomain.BaseDirectory,"GameHist.txt");
         }
         public void writeToFile(string e)
         {
-            //Since Lists aren't on every form, we are going to run a while loop to count lines, and use for post for-loop to know where to add our latest game
-            //Since, you can't play backwards via time.
+            //Simply check if exists and append all with newline, or simply append all
             string p = filePath();
-            StreamReader fileAppend = new StreamReader(p);
-            string line = fileAppend.ReadLine();
-            int lineCount = 0;
-            while(line != null)
+
+            Debug.WriteLine("Writing to: " + Path.GetFullPath(p));
+            if(File.Exists(p) && new FileInfo(p).Length > 0)
             {
-                lineCount++;
-                line = fileAppend.ReadLine();
-            }    
-            for(int i = 0; i < lineCount; i++)
-            {
-                if (i == 0)
-                {
-                    File.AppendAllText(p, e);
-                }
-                else
-                {
-                    File.AppendAllText(p, Environment.NewLine + e);
-                }
+                File.AppendAllText(p, Environment.NewLine + e);
             }
+            else
+            {
+                File.AppendAllText(p, e);
+            }
+            
         }
         public List<Game> parseFile(List<Game> gameHistory)
         {
-            //This is a function to parse the GameHist.txt into a List of Game Objects for reference on StatsForm and ReviewForm
+            
             string p = filePath();
+            if(!File.Exists(p))
+            {
+                return gameHistory;
+            }
             StreamReader fileRead = new StreamReader(p);
             string line = fileRead.ReadLine();
-            int index = 0;
             while(line != null)
             {
-                if (assembleEntry(gameHistory[index]) == line)
-                {
-                    index++;
-                    continue;
-                }
-                else
+                if (line.Trim() !=  "")
                 {
                     gameHistory.Add(stringToGame(line));
-                    index++;
                 }
+                line = fileRead.ReadLine();
+                 
             }
+            fileRead.Close();
             return gameHistory;
         }
         public int getp1Win(List<Game> g)
