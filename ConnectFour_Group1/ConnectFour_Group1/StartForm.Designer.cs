@@ -37,11 +37,12 @@
             // label1
             // 
             label1.AutoSize = true;
-            label1.Location = new Point(389, 163);
+            label1.Font = new Font("Comic Sans MS", 26.25F, FontStyle.Bold, GraphicsUnit.Point, 0);
+            label1.Location = new Point(280, 37);
             label1.Name = "label1";
-            label1.Size = new Size(38, 15);
+            label1.Size = new Size(249, 49);
             label1.TabIndex = 0;
-            label1.Text = "label1";
+            label1.Text = "Connect Four!";
             // 
             // btn_GoToPvE
             // 

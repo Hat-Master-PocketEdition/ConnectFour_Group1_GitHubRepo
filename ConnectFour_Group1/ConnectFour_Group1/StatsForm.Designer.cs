@@ -52,7 +52,7 @@
             Btn_BackToStart.Name = "Btn_BackToStart";
             Btn_BackToStart.Size = new Size(75, 23);
             Btn_BackToStart.TabIndex = 0;
-            Btn_BackToStart.Text = "Back";
+            Btn_BackToStart.Text = "Menu";
             Btn_BackToStart.UseVisualStyleBackColor = true;
             Btn_BackToStart.Click += Btn_BackToStart_Click;
             // 
