@@ -56,6 +56,7 @@ namespace ConnectFour_Group1
 
                     //this.Controls.Add(berd[x, y]);
                     board[x, y] = berd[x, y];
+                    //board[x, y].Click -= PictureBox_Clicked;
                     this.Controls.Add(board[x, y]);
                 }
             }

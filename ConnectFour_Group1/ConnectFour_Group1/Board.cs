@@ -16,6 +16,7 @@ namespace ConnectFour_Group1
         private string gameState = "Running";
         private bool isGameRun = true;
         Cell[,] board = new Cell[numRows, numCols];
+        Cell[,] cloneBoard = new Cell[numRows, numCols];
         bool control = false;
         Button rButton;
         Form parentForm;
@@ -252,13 +253,15 @@ namespace ConnectFour_Group1
                     if(numPlayers == 2)
                     {
                         //Send a Tie form to ReviewForm, via PvP bool (2)
-                        ReviewForm playerTie = new ReviewForm(3, 2, board, pointOne, pointTwo);
+                        MakeCloneBoard();
+                        ReviewForm playerTie = new ReviewForm(3, 2, cloneBoard, pointOne, pointTwo);
                         playerTie.Show();
                     }
                     else
                     {
                         //This assumes numPlayers is not 2, thus PvE
-                        ReviewForm cpuTie = new ReviewForm(3, 1, board, pointOne, pointTwo);
+                        MakeCloneBoard();
+                        ReviewForm cpuTie = new ReviewForm(3, 1, cloneBoard, pointOne, pointTwo);
                         cpuTie.Show();
                     }
                     parentForm.Hide();
@@ -891,7 +894,8 @@ namespace ConnectFour_Group1
             {
                 pve.saveGameResult();
             }
-            ReviewForm load = new ReviewForm(player, numPlayers, board, lockPointOne, lockPointTwo);
+            MakeCloneBoard();
+            ReviewForm load = new ReviewForm(player, numPlayers, cloneBoard, lockPointOne, lockPointTwo);
             //i cant believe i need a nested for loop just to add the board
             //i could probably figure out a different solution but idc we're so close and my brain hurts
             for (int x = 0; x < numRows; x++)
@@ -988,10 +992,24 @@ namespace ConnectFour_Group1
                 using (StreamWriter writer = new StreamWriter(filePath, true))
                 {
                     Debug.WriteLine("UBUBUBUBFUBFUDBFKSDNAKFNJFBESJ FBEWJ WRITING TO GameHist.txt");
-                    writer.WriteLine((id + 1) + "," + winState + ",C," + moveCount + ",999" + "\n");
+                    writer.WriteLine((id + 1) + "," + winState + ",C," + moveCount + ",999");
                 }
             }
 
+        }
+        public void MakeCloneBoard()
+        {
+            for (int x = 0; x < numRows; x++)
+            {
+                for (int y  = 0; y < numCols; y++)
+                {
+
+                    cloneBoard[x, y] = board[x, y];
+                    cloneBoard[x, y].Click -= PictureBox_Clicked;
+                    cloneBoard[x, y].MouseEnter -= MouseEnter;
+                    cloneBoard[x, y].MouseLeave -= MouseLeave;
+                }
+            }
         }
         public string getPlayerColor()
         {
