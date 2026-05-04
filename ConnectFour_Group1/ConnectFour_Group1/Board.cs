@@ -156,6 +156,7 @@ namespace ConnectFour_Group1
             //it traverses a column of CodeBoard until it finds an
             //open spot that "obeys the laws of gravity."
 
+
             bool ValidMove = false;
 
             int startY = 5;
@@ -167,6 +168,10 @@ namespace ConnectFour_Group1
                     //we cannot drop the chip here
                     //do nothing and break
 
+                    //but first, set control back to true
+                    //no other code will run due to logic conditionals
+                    //restore control to the player to allow them to place a chip
+                    control = true;
                     break;
                 }
                 else if (startY == 0)
