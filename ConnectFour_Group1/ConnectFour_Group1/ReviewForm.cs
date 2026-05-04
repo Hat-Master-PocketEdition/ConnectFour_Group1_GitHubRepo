@@ -202,7 +202,8 @@ namespace ConnectFour_Group1
         {
             //show stats after games over 
             StatsForm stats = new StatsForm();
-            stats.ShowDialog();
+            stats.Show();
+            this.Hide();
             //stats.Show();
             //this.Close();
         }
