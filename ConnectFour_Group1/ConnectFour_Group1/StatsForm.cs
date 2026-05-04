@@ -18,6 +18,7 @@ namespace ConnectFour_Group1
         //ListBox for SingleLine input of the ADS; {}
         //Gather Games on a List, and reference per object in succession
         private List<Game> listofGames = new List<Game>();
+        int counter = 0;
         public StatsForm()
         {
             InitializeComponent();
@@ -53,6 +54,7 @@ namespace ConnectFour_Group1
             //End Start, Mental Note: De-Parse ADS to variables for easy display on List Box
             //REMEMBER LISTBOX SINGLE LINE APPEND
             String line = file.ReadLine();
+            int counter = 0;
             int id;
             int w;
             char gT;
@@ -114,6 +116,7 @@ namespace ConnectFour_Group1
         }
         private void fillLBLs(Label l)
         {
+            
             //This function adds to LBLs upon what 'l' is;
             //GameCount (linecount for how many games), averages for Player1, and CPU;
             //P1 Based: Victories, Ties; CPU Based: Victories;
@@ -148,11 +151,16 @@ namespace ConnectFour_Group1
                 cpu_W_LBL.Text = "0";
                 for (int i = 0; i < listofGames.Count; i++)
                 {
-                    if (listofGames[i].getGameType() == 'C' && listofGames[i].getWin() == 2)
+                    if (listofGames[i].getGameType() == 'C' && listofGames[i].getWin() == 1)
                     {
-                        cpu_W_LBL.Text = (Int32.Parse(cpu_W_LBL.Text) + 1).ToString();
+                        counter++;
+                        Debug.WriteLine(counter);
+
+                        //cpu_W_LBL.Text = (Int32.Parse(cpu_W_LBL.Text) + 1).ToString();
+
                     }
                 }
+                cpu_W_LBL.Text = counter.ToString();
             }
             if(l == p1_WP_LBL)
             {
@@ -183,37 +191,42 @@ namespace ConnectFour_Group1
             }
             if(l == cpu_WP_LBL)
             {
-                cpu_WP_LBL.Text = "0%";
-                int cpuW = 0;
-                int cpuT = 0;
-                int cpuL = 0;
-                for (int i = 0; i < listofGames.Count; i++)
-                {
-                    if (listofGames[i].getGameType() == 'C')
-                    {
-                        if (listofGames[i].getWin() == 2)
-                        {
-                            cpuW++;
-                        }
-                        else if (listofGames[i].getWin() == 3)
-                        {
-                            cpuT++;
-                        }
-                        else
-                        {
-                            cpuL++;
-                        }
-                    }
-                }
-                if (cpuW + cpuT + cpuL > 0)
-                {
-                    double winPercent = (double)cpuW / (cpuW + cpuT + cpuL) * 100;
-                    cpu_WP_LBL.Text = winPercent.ToString("F2") + "%";
-                }
-                else
-                {
-                    cpu_WP_LBL.Text = "0%";
-                }
+                cpu_WP_LBL.Text = "99%";
+                float gamesPlayed = listofGames[listofGames.Count - 1].getID();
+                float percentWon = (counter / gamesPlayed) * 100;
+                cpu_WP_LBL.Text = percentWon.ToString("F2") + "%";
+                Debug.WriteLine("counter: " + counter + ", gamesPlayed: " + gamesPlayed + ", percentWon: " + percentWon);
+                //cpu_WP_LBL.Text = "0%";
+                //int cpuW = 0;
+                //int cpuT = 0;
+                //int cpuL = 0;
+                //for (int i = 0; i < listofGames.Count; i++)
+                //{
+                //    if (listofGames[i].getGameType() == 'C')
+                //    {
+                //        if (listofGames[i].getWin() == 2)
+                //        {
+                //            cpuW++;
+                //        }
+                //        else if (listofGames[i].getWin() == 3)
+                //        {
+                //            cpuT++;
+                //        }
+                //        else
+                //        {
+                //            cpuL++;
+                //        }
+                //    }
+                //}
+                //if (cpuW + cpuT + cpuL > 0)
+                //{
+                //    double winPercent = (double)cpuW / (cpuW + cpuT + cpuL) * 100;
+                //    cpu_WP_LBL.Text = winPercent.ToString("F2") + "%";
+                //}
+                //else
+                //{
+                //    cpu_WP_LBL.Text = "0%";
+                //}
             }
         }
     }
