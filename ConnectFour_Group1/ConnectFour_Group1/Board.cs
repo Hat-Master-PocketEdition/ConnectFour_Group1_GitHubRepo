@@ -1,4 +1,5 @@
-﻿using System.Diagnostics;
+﻿using System.Collections.Generic;
+using System.Diagnostics;
 using System.IO;
 namespace ConnectFour_Group1
 {
@@ -12,7 +13,6 @@ namespace ConnectFour_Group1
         private const int numRows = 7;
         private const int numCols = 6;
         //Added this int, to count moveCount; string gameState for how the game is; Bool for checking game;
-        private int moveCount = 0;
         private string gameState = "Running";
         private bool isGameRun = true;
         Cell[,] board = new Cell[numRows, numCols];
@@ -20,6 +20,11 @@ namespace ConnectFour_Group1
         Button rButton;
         Form parentForm;
         Label theLabel = new Label();
+
+        int moveCount = 0;
+        int winState = 99;
+        char gameType;
+        int colorSchema;
 
         Cell lockPointOne = new Cell();
         Cell lockPointTwo = new Cell();
@@ -144,7 +149,6 @@ namespace ConnectFour_Group1
             if (control)
             {
                 RedrawGameBoard();
-
             }
         }
         private void DropChip(int player, int x, int y)
@@ -868,6 +872,10 @@ namespace ConnectFour_Group1
         }
         private void PlayerWon(int player, int numPlayers)
         {
+            if(numPlayers == 1)
+            {
+                UpdateSaveFile(player);
+            }
             control = false;
             setGameRun(false);
             //If-chain to check player, and numPlayers for AI win;
@@ -896,6 +904,95 @@ namespace ConnectFour_Group1
             load.Show();
             parentForm.Hide();
         }
+        public void UpdateSaveFile(int player)
+        {
+            //credit goes to DS for original code in StatsForm.ReadTextFile() for rreading
+            //AW shamelessly stole most it and modded it for writing to GameHist
+            string filePath = "../../Resources/GameHist.txt";
+            int id = 9999999;
+            int w = 9999999;
+            char gT;
+            int mC;
+            String cS;
+            //Reading GameHist.txt and gathering necessary data from last entry
+            {
+                //This creates a StreamReader and grabs the GameHist.txt
+                StreamReader file = new StreamReader(filePath);
+                //End Start, Mental Note: De-Parse ADS to variables for easy display on List Box
+                //REMEMBER LISTBOX SINGLE LINE APPEND
+                String line = file.ReadLine();
+                int delimPOS;
+                char delim = ',';
+                Game newGame;
+                if (File.Exists(filePath))
+                {
+                    Debug.WriteLine("File Found");
+                    while (line != null)
+                    {
+                        if (line.Trim() != "")
+                        {
+                            //Locate DelimPOS
+                            delimPOS = line.IndexOf(delim);
+                            //Read up to, but not the comma
+                            id = Int32.Parse(line.Substring(0, delimPOS));
+                            Debug.WriteLine(id);
+                            //Change line to Post comma
+                            line = line.Substring(delimPOS + 1);
+                            //Repeat for ADS
+                            delimPOS = line.IndexOf(delim);
+                            w = Int32.Parse(line.Substring(0, delimPOS));
+                            Debug.WriteLine(w);
+                            line = line.Substring(delimPOS + 1);
+                            delimPOS = line.IndexOf(delim);
+                            gT = Convert.ToChar(line.Substring(0, delimPOS));
+                            Debug.WriteLine(gT);
+                            line = line.Substring(delimPOS + 1);
+                            delimPOS = line.IndexOf(delim);
+                            mC = Int32.Parse(line.Substring(0, delimPOS));
+                            Debug.WriteLine(mC);
+                            line = line.Substring(delimPOS + 1);
+                            delimPOS = line.IndexOf(delim);
+                            cS = line;
+                            Debug.WriteLine(cS);
+                            //Compiles all our data to the list
+                            newGame = new Game(id, w, gT, mC, cS);
+
+                        }
+                        line = file.ReadLine();
+                    }
+                    //by the end of this whileloop, we should have the most recent entry in GameHist
+                    file.Close();
+                }
+                else
+                {
+                    Console.WriteLine("File Not Found");
+                }
+            }
+
+            //Writing to GameHist.txt with updated data
+            {
+                if(isBoardFull())
+                {
+                    //if board is full and numPlayers == 1
+                    //then it's PvE and there's a tie,
+                    winState = 2;
+                }
+                else
+                {
+                    //since the human is always player 1 in a single player game
+                    //and the ai is always player 2, i can just set this variable to player - 1
+                    //when writing it to the board (assuming it's not a tie, in which case it should
+                    //always write as 2
+                    winState = player - 1;
+                }
+                using (StreamWriter writer = new StreamWriter(filePath, true))
+                {
+                    Debug.WriteLine("UBUBUBUBFUBFUDBFKSDNAKFNJFBESJ FBEWJ WRITING TO GameHist.txt");
+                    writer.WriteLine((id + 1) + "," + winState + ",C," + moveCount + ",999" + "\n");
+                }
+            }
+
+        }
         public string getPlayerColor()
         {
             if (PlayerOneColor == CurrentPlayerColor && CurrentPlayer == 1)
@@ -908,6 +1005,11 @@ namespace ConnectFour_Group1
             }
         }
         //Here is Utility, then Mutator Functions -DS
+        public void setControlFalse()
+        {
+            control = false;
+            //this is used to stop players from interacting with copy of the board in ReviewForm
+        }
         public void setMoveCount(int mC)
         {
             moveCount = mC;
