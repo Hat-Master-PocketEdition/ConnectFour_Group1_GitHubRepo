@@ -37,11 +37,10 @@
             // 
             // BackToMenu
             // 
-            BackToMenu.Font = new Font("Segoe UI", 9F, FontStyle.Bold);
-            BackToMenu.Location = new Point(364, 542);
-            BackToMenu.Margin = new Padding(3, 4, 3, 4);
+            BackToMenu.Font = new Font("Comic Sans MS", 12F, FontStyle.Bold);
+            BackToMenu.Location = new Point(282, 402);
             BackToMenu.Name = "BackToMenu";
-            BackToMenu.Size = new Size(86, 31);
+            BackToMenu.Size = new Size(115, 40);
             BackToMenu.TabIndex = 0;
             BackToMenu.Text = "Menu";
             BackToMenu.UseVisualStyleBackColor = true;
@@ -50,18 +49,19 @@
             // theLabel
             // 
             theLabel.AutoSize = true;
-            theLabel.Location = new Point(376, 12);
+            theLabel.Location = new Point(329, 9);
             theLabel.Name = "theLabel";
-            theLabel.Size = new Size(50, 20);
+            theLabel.Size = new Size(38, 15);
             theLabel.TabIndex = 1;
             theLabel.Text = "label1";
             // 
             // btnRestart
             // 
-            btnRestart.Font = new Font("Segoe UI", 9F, FontStyle.Bold);
-            btnRestart.Location = new Point(261, 542);
+            btnRestart.Font = new Font("Comic Sans MS", 12F, FontStyle.Bold);
+            btnRestart.Location = new Point(155, 402);
+            btnRestart.Margin = new Padding(3, 2, 3, 2);
             btnRestart.Name = "btnRestart";
-            btnRestart.Size = new Size(86, 31);
+            btnRestart.Size = new Size(115, 40);
             btnRestart.TabIndex = 2;
             btnRestart.Text = "Restart";
             btnRestart.UseVisualStyleBackColor = true;
@@ -69,10 +69,11 @@
             // 
             // btnExit
             // 
-            btnExit.Font = new Font("Segoe UI", 9F, FontStyle.Bold);
-            btnExit.Location = new Point(575, 542);
+            btnExit.Font = new Font("Comic Sans MS", 12F, FontStyle.Bold);
+            btnExit.Location = new Point(541, 402);
+            btnExit.Margin = new Padding(3, 2, 3, 2);
             btnExit.Name = "btnExit";
-            btnExit.Size = new Size(86, 31);
+            btnExit.Size = new Size(115, 40);
             btnExit.TabIndex = 3;
             btnExit.Text = "Exit";
             btnExit.UseVisualStyleBackColor = true;
@@ -80,10 +81,11 @@
             // 
             // btnStats
             // 
-            btnStats.Font = new Font("Segoe UI", 9F, FontStyle.Bold);
-            btnStats.Location = new Point(469, 542);
+            btnStats.Font = new Font("Comic Sans MS", 12F, FontStyle.Bold);
+            btnStats.Location = new Point(410, 402);
+            btnStats.Margin = new Padding(3, 2, 3, 2);
             btnStats.Name = "btnStats";
-            btnStats.Size = new Size(86, 31);
+            btnStats.Size = new Size(115, 40);
             btnStats.TabIndex = 4;
             btnStats.Text = "Stats";
             btnStats.UseVisualStyleBackColor = true;
@@ -91,16 +93,15 @@
             // 
             // ReviewForm
             // 
-            AutoScaleDimensions = new SizeF(8F, 20F);
+            AutoScaleDimensions = new SizeF(7F, 15F);
             AutoScaleMode = AutoScaleMode.Font;
             BackColor = Color.FromArgb(0, 0, 178);
-            ClientSize = new Size(914, 600);
+            ClientSize = new Size(800, 450);
             Controls.Add(btnStats);
             Controls.Add(btnExit);
             Controls.Add(btnRestart);
             Controls.Add(theLabel);
             Controls.Add(BackToMenu);
-            Margin = new Padding(3, 4, 3, 4);
             Name = "ReviewForm";
             StartPosition = FormStartPosition.CenterScreen;
             Text = "ReviewForm";

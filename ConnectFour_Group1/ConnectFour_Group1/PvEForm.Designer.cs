@@ -35,9 +35,10 @@
             // 
             // Btn_BackToStart
             // 
-            Btn_BackToStart.Location = new Point(12, 415);
+            Btn_BackToStart.Font = new Font("Comic Sans MS", 12F, FontStyle.Bold, GraphicsUnit.Point, 0);
+            Btn_BackToStart.Location = new Point(12, 391);
             Btn_BackToStart.Name = "Btn_BackToStart";
-            Btn_BackToStart.Size = new Size(75, 23);
+            Btn_BackToStart.Size = new Size(115, 40);
             Btn_BackToStart.TabIndex = 0;
             Btn_BackToStart.Text = "Back";
             Btn_BackToStart.UseVisualStyleBackColor = true;
@@ -45,9 +46,10 @@
             // 
             // restartButton
             // 
-            restartButton.Location = new Point(713, 415);
+            restartButton.Font = new Font("Comic Sans MS", 12F, FontStyle.Bold, GraphicsUnit.Point, 0);
+            restartButton.Location = new Point(667, 391);
             restartButton.Name = "restartButton";
-            restartButton.Size = new Size(75, 23);
+            restartButton.Size = new Size(115, 40);
             restartButton.TabIndex = 2;
             restartButton.Text = "Restart";
             restartButton.UseVisualStyleBackColor = true;

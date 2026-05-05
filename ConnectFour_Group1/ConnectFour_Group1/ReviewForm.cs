@@ -71,7 +71,7 @@ namespace ConnectFour_Group1
         {
             StartForm load = new StartForm();
             load.Show();
-            this.Hide();
+            load.Show();
         }
         private void AppExit(object sender, FormClosedEventArgs e)
         {
@@ -182,12 +182,13 @@ namespace ConnectFour_Group1
             if (isPVP)
             {
                 new PvPForm().Show();
+                this.Hide();
             }
             else
             {
 
                 new PvEForm().Show();
-
+                this.Hide();
             }
 
         }

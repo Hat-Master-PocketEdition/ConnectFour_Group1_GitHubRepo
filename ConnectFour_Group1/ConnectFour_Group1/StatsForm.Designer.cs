@@ -48,9 +48,10 @@
             // 
             // Btn_BackToStart
             // 
-            Btn_BackToStart.Location = new Point(12, 415);
+            Btn_BackToStart.Font = new Font("Comic Sans MS", 12F, FontStyle.Bold, GraphicsUnit.Point, 0);
+            Btn_BackToStart.Location = new Point(12, 395);
             Btn_BackToStart.Name = "Btn_BackToStart";
-            Btn_BackToStart.Size = new Size(75, 23);
+            Btn_BackToStart.Size = new Size(115, 40);
             Btn_BackToStart.TabIndex = 0;
             Btn_BackToStart.Text = "Menu";
             Btn_BackToStart.UseVisualStyleBackColor = true;

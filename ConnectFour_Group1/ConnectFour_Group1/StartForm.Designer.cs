@@ -46,9 +46,10 @@
             // 
             // btn_GoToPvE
             // 
-            btn_GoToPvE.Location = new Point(292, 415);
+            btn_GoToPvE.Font = new Font("Comic Sans MS", 12F, FontStyle.Bold);
+            btn_GoToPvE.Location = new Point(209, 395);
             btn_GoToPvE.Name = "btn_GoToPvE";
-            btn_GoToPvE.Size = new Size(75, 23);
+            btn_GoToPvE.Size = new Size(115, 40);
             btn_GoToPvE.TabIndex = 1;
             btn_GoToPvE.Text = "1 Player";
             btn_GoToPvE.UseVisualStyleBackColor = true;
@@ -56,9 +57,10 @@
             // 
             // btn_GoToPvP
             // 
-            btn_GoToPvP.Location = new Point(373, 415);
+            btn_GoToPvP.Font = new Font("Comic Sans MS", 12F, FontStyle.Bold);
+            btn_GoToPvP.Location = new Point(359, 395);
             btn_GoToPvP.Name = "btn_GoToPvP";
-            btn_GoToPvP.Size = new Size(75, 23);
+            btn_GoToPvP.Size = new Size(115, 40);
             btn_GoToPvP.TabIndex = 2;
             btn_GoToPvP.Text = "2 Player";
             btn_GoToPvP.UseVisualStyleBackColor = true;
@@ -66,9 +68,10 @@
             // 
             // btn_GoToStats
             // 
-            btn_GoToStats.Location = new Point(454, 415);
+            btn_GoToStats.Font = new Font("Comic Sans MS", 12F, FontStyle.Bold);
+            btn_GoToStats.Location = new Point(507, 395);
             btn_GoToStats.Name = "btn_GoToStats";
-            btn_GoToStats.Size = new Size(75, 23);
+            btn_GoToStats.Size = new Size(115, 40);
             btn_GoToStats.TabIndex = 3;
             btn_GoToStats.Text = "Stats";
             btn_GoToStats.UseVisualStyleBackColor = true;

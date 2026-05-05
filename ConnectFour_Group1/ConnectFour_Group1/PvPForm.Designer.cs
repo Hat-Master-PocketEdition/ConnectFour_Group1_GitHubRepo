@@ -29,29 +29,31 @@
         private void InitializeComponent()
         {
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(PvPForm));
-            Btn_BackToStart = new Button();
             restartButton = new Button();
+            Btn_BacktoStart = new Button();
             SuspendLayout();
-            // 
-            // Btn_BackToStart
-            // 
-            Btn_BackToStart.Location = new Point(12, 415);
-            Btn_BackToStart.Name = "Btn_BackToStart";
-            Btn_BackToStart.Size = new Size(75, 23);
-            Btn_BackToStart.TabIndex = 0;
-            Btn_BackToStart.Text = "Back";
-            Btn_BackToStart.UseVisualStyleBackColor = true;
-            Btn_BackToStart.Click += Btn_BackToStart_Click;
             // 
             // restartButton
             // 
-            restartButton.Location = new Point(713, 415);
+            restartButton.Font = new Font("Comic Sans MS", 12F, FontStyle.Bold, GraphicsUnit.Point, 0);
+            restartButton.Location = new Point(667, 391);
             restartButton.Name = "restartButton";
-            restartButton.Size = new Size(75, 23);
-            restartButton.TabIndex = 1;
+            restartButton.Size = new Size(115, 40);
+            restartButton.TabIndex = 4;
             restartButton.Text = "Restart";
             restartButton.UseVisualStyleBackColor = true;
             restartButton.Click += restartButton_Click;
+            // 
+            // Btn_BacktoStart
+            // 
+            Btn_BacktoStart.Font = new Font("Comic Sans MS", 12F, FontStyle.Bold, GraphicsUnit.Point, 0);
+            Btn_BacktoStart.Location = new Point(12, 391);
+            Btn_BacktoStart.Name = "Btn_BacktoStart";
+            Btn_BacktoStart.Size = new Size(115, 40);
+            Btn_BacktoStart.TabIndex = 3;
+            Btn_BacktoStart.Text = "Back";
+            Btn_BacktoStart.UseVisualStyleBackColor = true;
+            Btn_BacktoStart.Click += Btn_BackToStart_Click;
             // 
             // PvPForm
             // 
@@ -60,7 +62,7 @@
             BackColor = Color.FromArgb(0, 0, 178);
             ClientSize = new Size(800, 450);
             Controls.Add(restartButton);
-            Controls.Add(Btn_BackToStart);
+            Controls.Add(Btn_BacktoStart);
             Icon = (Icon)resources.GetObject("$this.Icon");
             Name = "PvPForm";
             StartPosition = FormStartPosition.CenterScreen;
@@ -70,8 +72,7 @@
         }
 
         #endregion
-
-        private Button Btn_BackToStart;
         private Button restartButton;
+        private Button Btn_BacktoStart;
     }
 }
